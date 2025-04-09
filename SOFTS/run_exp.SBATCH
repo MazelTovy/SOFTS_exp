@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=4
+#SBATCH --time=12:00:00
+#SBATCH --mem=32GB
+#SBATCH --gres=gpu:1
+#SBATCH --account=pr_325_general
+#SBATCH --output=/scratch/sx2490/Logs/softs/%j.out
+#SBATCH --error=/scratch/sx2490/Logs/softs/%j.err
+#SBATCH --job-name=patchtst_etth1
+
+mkdir -p /scratch/sx2490/Logs/softs
+
+# Print job information
+echo "================ JOB INFORMATION ================"
+echo "Running on node: $SLURMD_NODENAME"
+echo "Job ID: $SLURM_JOB_ID"
+echo "Start time: $(date)"
+echo "===========================================" 
+
+# Using singularity container for model training
+singularity exec --nv \
+    --overlay /scratch/sx2490/pytorch-example/my_pytorch.ext3:ro \
+    /scratch/work/public/singularity/cuda12.1.1-cudnn8.9.0-devel-ubuntu22.04.2.sif \
+    /bin/bash -c "source /ext3/env.sh; \
+    cd /scratch/sx2490/SOFTS_exp/SOFTS/ && \
+    echo 'Starting training...' && \
+    bash SOFTS_ETTh1.sh || { echo 'Training script failed'; exit 1; }"
+
+echo "================ JOB COMPLETED ================"
+echo "End time: $(date)"
+echo "===========================================" 
+
+# Check job status
+sacct -j $SLURM_JOB_ID --format=JobID,State,ExitCode,Reason 
