@@ -33,5 +33,19 @@ echo "================ JOB COMPLETED ================"
 echo "End time: $(date)"
 echo "===========================================" 
 
+# Extract and save results to a summary file
+OUTFILE="/scratch/sx2490/Logs/softs/${SLURM_JOB_ID}.out"
+SUMMARY_FILE="/scratch/sx2490/SOFTS_exp/SOFTS_original/${SLURM_JOB_ID}.txt"
+
+echo "Extracting results to summary file: ${SUMMARY_FILE}"
+echo "JOB ID: ${SLURM_JOB_ID}" > "${SUMMARY_FILE}"
+echo "Run completed at: $(date)" >> "${SUMMARY_FILE}"
+echo "===========================================" >> "${SUMMARY_FILE}"
+
+# Extract settings and results
+grep -E "^.*long_term_forecast.*|^mse:" "${OUTFILE}" >> "${SUMMARY_FILE}"
+
+echo "Summary extraction completed"
+
 # Check job status
 sacct -j $SLURM_JOB_ID --format=JobID,State,ExitCode,Reason 
