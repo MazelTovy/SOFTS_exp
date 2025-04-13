@@ -3,11 +3,13 @@ from exp.exp_basic import Exp_Basic
 from utils.tools import EarlyStopping, adjust_learning_rate, AverageMeter
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch import optim
 import os
 import time
 import warnings
 import numpy as np
+import random
 
 warnings.filterwarnings('ignore')
 
@@ -15,6 +17,9 @@ warnings.filterwarnings('ignore')
 class Exp_Long_Term_Forecast(Exp_Basic):
     def __init__(self, args):
         super(Exp_Long_Term_Forecast, self).__init__(args)
+        self.beta = getattr(args, 'beta', 1.0)  # ZeroMask loss coefficient
+        self.gamma = getattr(args, 'gamma', 0.1)  # Consistency loss coefficient
+        self.mask_ratios = [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5]  # 掩码比例，从序列长度的5%到50%
 
     def _build_model(self):
         model = self.model_dict[self.args.model].Model(self.args).float()
@@ -34,81 +39,85 @@ class Exp_Long_Term_Forecast(Exp_Basic):
     def _select_criterion(self):
         criterion = nn.MSELoss()
         return criterion
+        
+    def _apply_zero_mask(self, x, mask_len):
+        """Apply a zero mask to the first mask_len steps of the sequence"""
+        x_masked = x.clone()
+        x_masked[:, :mask_len, :] = 0.0
+        return x_masked
 
-    def apply_mask(self, batch_x, mask_length):
-        """Apply masking to the beginning of sequence up to mask_length"""
-        masked_batch = batch_x.clone()
-        masked_batch[:, :mask_length, :] = 0.
-        return masked_batch
+    def _multi_window_mask_analysis(self, batch_x, batch_x_mark, dec_inp, batch_y_mark, batch_y, criterion):
+        """
+        对多个窗口长度的掩码进行系统分析，找出问题数据点
+        返回：
+        1. 问题得分 - 指示每个时间点的问题严重性
+        2. 最优掩码长度 - 导致最大性能改善的掩码长度
+        3. 最优掩码后的嵌入 - 用于一致性约束
+        """
+        batch_size, seq_len, _ = batch_x.shape
         
-    def compute_mask_penalty_loss(self, outputs, batch_y, criterion, batch_x, f_dim):
-        """Compute penalty loss when mask performs better than original sequence"""
-        original_loss = criterion(outputs, batch_y)
-        mask_losses = []
-        mask_lengths = []
+        # 存储每个掩码尝试的结果
+        original_outputs, original_embeddings = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
+        f_dim = -1 if self.args.features == 'MS' else 0
+        original_outputs = original_outputs[:, -self.args.pred_len:, f_dim:]
+        original_mse = criterion(original_outputs, batch_y)
         
-        # Calculate max mask length (up to 2/3 of sequence)
-        seq_len = batch_x.shape[1]
-        max_mask_len = int(seq_len * 2 / 3)
+        # 问题得分矩阵 - 初始化为0
+        problem_scores = torch.zeros((batch_size, seq_len), device=self.device)
         
-        # Create list of mask lengths with increasing step sizes
-        step = 3
-        for i in range(0, max_mask_len, step):
-            mask_lengths.append(i)
-            # Increase step size as we get deeper into the sequence
-            if i > 30:
-                step = 6
-            if i > 60:
-                step = 9
-                
-        # Compute loss for each mask length
-        for mask_len in mask_lengths:
-            if mask_len == 0:  # Skip when mask length is 0 (same as original)
+        # 存储所有掩码结果
+        all_masked_mse = []
+        all_masked_embeddings = []
+        
+        # 系统尝试不同的掩码长度
+        best_improvement = 0
+        best_mask_len = 0
+        best_embeddings = None
+        
+        for ratio in self.mask_ratios:
+            mask_len = int(seq_len * ratio)
+            if mask_len == 0:
                 continue
                 
-            # Apply mask
-            masked_batch_x = self.apply_mask(batch_x, mask_len)
-            
-            # Forward pass with masked input
-            if self.args.output_attention:
-                masked_outputs = self.model(masked_batch_x, None, None, None)[0]
-            else:
-                masked_outputs = self.model(masked_batch_x, None, None, None)
-                
+            # 应用掩码
+            batch_x_masked = self._apply_zero_mask(batch_x, mask_len)
+            masked_outputs, masked_embeddings = self.model(batch_x_masked, batch_x_mark, dec_inp, batch_y_mark)
             masked_outputs = masked_outputs[:, -self.args.pred_len:, f_dim:]
-            masked_loss = criterion(masked_outputs, batch_y)
-            mask_losses.append(masked_loss.item())
+            masked_mse = criterion(masked_outputs, batch_y)
+            
+            # 计算改进程度
+            improvement = original_mse - masked_mse
+            
+            # 存储结果
+            all_masked_mse.append(masked_mse)
+            all_masked_embeddings.append(masked_embeddings)
+            
+            # 如果掩码后性能更好，更新问题得分
+            if improvement > 0:
+                # 对被掩码的时间步，增加其问题得分
+                # 问题得分增加量与性能改进成正比
+                improvement_ratio = improvement / original_mse
+                for t in range(mask_len):
+                    # 更近的时间点问题影响更大
+                    problem_scores[:, t] += improvement_ratio * (1.0 - t/mask_len)
+                
+                # 更新最佳掩码
+                if improvement > best_improvement:
+                    best_improvement = improvement
+                    best_mask_len = mask_len
+                    best_embeddings = masked_embeddings
         
-        # If any mask performs better than original, apply penalty
-        mask_losses = np.array(mask_losses)
-        if len(mask_losses) > 0 and np.min(mask_losses) < original_loss.item():
-            # Calculate penalty based on improvement
-            min_mask_loss = np.min(mask_losses)
-            best_mask_idx = np.argmin(mask_losses)
-            best_mask_len = mask_lengths[best_mask_idx+1] if best_mask_idx+1 < len(mask_lengths) else mask_lengths[best_mask_idx]
-            improvement = original_loss.item() - min_mask_loss
-            # penalty_factor = 0.5  # Adjustable factor
-            penalty_factor = 1000
-            penalty_loss = original_loss + improvement * penalty_factor
+        # 如果没有找到改进，使用原始嵌入
+        if best_embeddings is None:
+            best_embeddings = original_embeddings
+            best_mask_len = 0
             
-            # Print detailed comparison info (every 100 iters to avoid flooding logs)
-            if hasattr(self, 'log_counter'):
-                self.log_counter += 1
-            else:
-                self.log_counter = 0
-                
-            if self.log_counter % 100 == 0:
-                print("\n------ Mask Loss Comparison ------")
-                print(f"Original Loss: {original_loss.item():.7f}")
-                print(f"Best Mask Loss: {min_mask_loss:.7f} (mask length: {best_mask_len})")
-                print(f"Improvement: {improvement:.7f} ({improvement/original_loss.item()*100:.2f}%)")
-                print(f"Applied Penalty Factor: {penalty_factor}")
-                print(f"Final Loss with Penalty: {penalty_loss.item():.7f}")
-                print("---------------------------------\n")
-                
-            return penalty_loss
+        # 正则化问题得分
+        max_scores = torch.max(problem_scores, dim=1, keepdim=True)[0]
+        if torch.any(max_scores > 0):
+            problem_scores = problem_scores / (max_scores + 1e-7)
             
-        return original_loss
+        return problem_scores, best_mask_len, best_embeddings, original_mse
 
     def vali(self, vali_data, vali_loader, criterion):
         total_loss = AverageMeter()
@@ -132,14 +141,14 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 if self.args.use_amp:
                     with torch.cuda.amp.autocast():
                         if self.args.output_attention:
-                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
+                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0][0]
                         else:
-                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
+                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
                 else:
                     if self.args.output_attention:
-                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
+                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0][0]
                     else:
-                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
+                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
                 f_dim = -1 if self.args.features == 'MS' else 0
                 outputs = outputs[:, -self.args.pred_len:, f_dim:]
                 batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
@@ -169,18 +178,9 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         if self.args.use_amp:
             scaler = torch.cuda.amp.GradScaler()
 
-        # Flag to enable/disable mask penalty
-        use_mask_penalty = getattr(self.args, 'use_mask_penalty', True)
-        
-        # Track original vs penalty losses
-        epoch_orig_losses = []
-        epoch_penalty_losses = []
-
         for epoch in range(self.args.train_epochs):
             iter_count = 0
             train_loss = []
-            orig_losses = []
-            penalty_losses = []
 
             self.model.train()
             epoch_time = time.time()
@@ -201,61 +201,73 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 dec_inp = torch.zeros_like(batch_y[:, -self.args.pred_len:, :]).float()
                 dec_inp = torch.cat([batch_y[:, :self.args.label_len, :], dec_inp], dim=1).float().to(self.device)
 
-                # encoder - decoder
+                # 确定目标维度
+                f_dim = -1 if self.args.features == 'MS' else 0
+                target_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
+                
                 if self.args.use_amp:
                     with torch.cuda.amp.autocast():
+                        # 多窗口掩码分析
+                        problem_scores, best_mask_len, best_masked_embeddings, original_mse = self._multi_window_mask_analysis(
+                            batch_x, batch_x_mark, dec_inp, batch_y_mark, target_y, criterion
+                        )
+                        
+                        # 获取原始输出和嵌入
+                        outputs, original_embeddings = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
                         if self.args.output_attention:
-                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
-                        else:
-                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
-
-                        f_dim = -1 if self.args.features == 'MS' else 0
+                            outputs = outputs[0]
                         outputs = outputs[:, -self.args.pred_len:, f_dim:]
-                        batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
                         
-                        # Calculate original loss for comparison
-                        original_loss = criterion(outputs, batch_y)
-                        orig_losses.append(original_loss.item())
+                        # 基础MSE损失
+                        mse_loss = criterion(outputs, target_y)
                         
-                        if use_mask_penalty:
-                            loss = self.compute_mask_penalty_loss(outputs, batch_y, criterion, batch_x, f_dim)
-                            penalty_losses.append(loss.item())
-                        else:
-                            loss = original_loss
+                        # 计算Zero Mask Loss - 对问题数据点的惩罚
+                        # 如果问题得分高，增加惩罚
+                        zero_mask_loss = torch.mean(problem_scores) * (original_mse - mse_loss).abs()
+                        
+                        # 计算一致性损失 - 一致性损失对问题区域要求较低
+                        # 用(1-problem_scores)作为权重，问题区域权重低
+                        weights = 1.0 - problem_scores.mean(dim=1, keepdim=True).unsqueeze(-1)  # [B, 1, 1]
+                        weighted_diff = (original_embeddings - best_masked_embeddings) * weights
+                        consistency_loss = torch.mean(weighted_diff ** 2)
+                        
+                        # 总损失
+                        loss = mse_loss + self.beta * zero_mask_loss + self.gamma * consistency_loss
 
                 else:
+                    # 多窗口掩码分析
+                    problem_scores, best_mask_len, best_masked_embeddings, original_mse = self._multi_window_mask_analysis(
+                        batch_x, batch_x_mark, dec_inp, batch_y_mark, target_y, criterion
+                    )
+                    
+                    # 获取原始输出和嵌入
+                    outputs, original_embeddings = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
                     if self.args.output_attention:
-                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
-                    else:
-                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
-
-                    f_dim = -1 if self.args.features == 'MS' else 0
+                        outputs = outputs[0]
                     outputs = outputs[:, -self.args.pred_len:, f_dim:]
-                    batch_y = batch_y[:, -self.args.pred_len:, f_dim:].to(self.device)
                     
-                    # Calculate original loss for comparison
-                    original_loss = criterion(outputs, batch_y)
-                    orig_losses.append(original_loss.item())
+                    # 基础MSE损失
+                    mse_loss = criterion(outputs, target_y)
                     
-                    if use_mask_penalty:
-                        loss = self.compute_mask_penalty_loss(outputs, batch_y, criterion, batch_x, f_dim)
-                        penalty_losses.append(loss.item())
-                    else:
-                        loss = original_loss
+                    # 计算Zero Mask Loss - 对问题数据点的惩罚
+                    # 如果问题得分高，增加惩罚
+                    zero_mask_loss = torch.mean(problem_scores) * (original_mse - mse_loss).abs()
+                    
+                    # 计算一致性损失 - 一致性损失对问题区域要求较低
+                    # 用(1-problem_scores)作为权重，问题区域权重低
+                    weights = 1.0 - problem_scores.mean(dim=1, keepdim=True).unsqueeze(-1)  # [B, 1, 1]
+                    weighted_diff = (original_embeddings - best_masked_embeddings) * weights
+                    consistency_loss = torch.mean(weighted_diff ** 2)
+                    
+                    # 总损失
+                    loss = mse_loss + self.beta * zero_mask_loss + self.gamma * consistency_loss
 
                 if (i + 1) % 100 == 0:
                     loss_float = loss.item()
                     train_loss.append(loss_float)
-                    
-                    # Display additional loss info
-                    if use_mask_penalty:
-                        orig_avg = np.mean(orig_losses[-100:])
-                        penalty_avg = np.mean(penalty_losses[-100:])
-                        print("\titers: {0}, epoch: {1} | loss: {2:.7f} | orig_loss: {3:.7f} | penalty: {4:.7f}".format(
-                            i + 1, epoch + 1, loss_float, orig_avg, penalty_avg))
-                    else:
-                        print("\titers: {0}, epoch: {1} | loss: {2:.7f}".format(i + 1, epoch + 1, loss_float))
-                    
+                    print("\titers: {0}, epoch: {1} | loss: {2:.7f} | mse: {3:.7f} | zero_mask: {4:.7f} | consistency: {5:.7f} | best_mask_len: {6}".format(
+                        i + 1, epoch + 1, loss_float, mse_loss.item(), 
+                        zero_mask_loss.item(), consistency_loss.item(), best_mask_len))
                     speed = (time.time() - time_now) / iter_count
                     left_time = speed * ((self.args.train_epochs - epoch) * train_steps - i)
                     print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
@@ -270,30 +282,14 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                     loss.backward()
                     model_optim.step()
 
+
             print("Epoch: {} cost time: {}".format(epoch + 1, time.time() - epoch_time))
-            
-            # Average losses for this epoch
-            train_loss = np.average(train_loss) if train_loss else 0
-            
-            # Calculate and store epoch avg losses
-            if use_mask_penalty and orig_losses and penalty_losses:
-                epoch_orig_avg = np.average(orig_losses)
-                epoch_penalty_avg = np.average(penalty_losses)
-                epoch_orig_losses.append(epoch_orig_avg)
-                epoch_penalty_losses.append(epoch_penalty_avg)
-                
-                print("Epoch Losses - Original: {:.7f}, With Penalty: {:.7f}, Difference: {:.7f} ({:.2f}%)".format(
-                    epoch_orig_avg, epoch_penalty_avg, 
-                    epoch_penalty_avg - epoch_orig_avg,
-                    (epoch_penalty_avg - epoch_orig_avg) / epoch_orig_avg * 100 if epoch_orig_avg != 0 else 0
-                ))
-            
+            train_loss = np.average(train_loss)
             vali_loss = self.vali(vali_data, vali_loader, criterion)
             test_loss = self.vali(test_data, test_loader, criterion)
 
             print("Epoch: {0}, Steps: {1} | Train Loss: {2:.7f} Vali Loss: {3:.7f} Test Loss: {4:.7f}".format(
                 epoch + 1, train_steps, train_loss, vali_loss, test_loss))
-            
             early_stopping(vali_loss, self.model, path)
             if early_stopping.early_stop:
                 print("Early stopping")
@@ -303,25 +299,9 @@ class Exp_Long_Term_Forecast(Exp_Basic):
 
         best_model_path = path + '/' + 'checkpoint.pth'
         self.model.load_state_dict(torch.load(best_model_path))
-        
-        # Print final summary of loss comparison if using mask penalty
-        if use_mask_penalty and epoch_orig_losses and epoch_penalty_losses:
-            print("\n===== Training Loss Summary =====")
-            print("Dataset: {}, seq_len: {}, pred_len: {}".format(
-                self.args.data, self.args.seq_len, self.args.pred_len))
-            print("Avg Original Loss: {:.7f}".format(np.mean(epoch_orig_losses)))
-            print("Avg Penalty Loss: {:.7f}".format(np.mean(epoch_penalty_losses)))
-            print("Avg Difference: {:.7f} ({:.2f}%)".format(
-                np.mean(epoch_penalty_losses) - np.mean(epoch_orig_losses),
-                (np.mean(epoch_penalty_losses) - np.mean(epoch_orig_losses)) / np.mean(epoch_orig_losses) * 100 
-                if np.mean(epoch_orig_losses) != 0 else 0
-            ))
-            print("================================\n")
-            
         if not self.args.save_model:
             import shutil
             shutil.rmtree(path)
-            
         return self.model
 
     def test(self, setting, test=0):
@@ -354,15 +334,14 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 if self.args.use_amp:
                     with torch.cuda.amp.autocast():
                         if self.args.output_attention:
-                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
+                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0][0]
                         else:
-                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
+                            outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
                 else:
                     if self.args.output_attention:
-                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
-
+                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0][0]
                     else:
-                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
+                        outputs = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)[0]
 
                 f_dim = -1 if self.args.features == 'MS' else 0
                 outputs = outputs[:, -self.args.pred_len:, f_dim:]

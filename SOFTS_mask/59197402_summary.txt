@@ -1,0 +1,1134 @@
+JOB ID: 59197402
+Run completed at: Fri Apr 11 11:47:27 AM EDT 2025
+===========================================
+============= RESULTS SUMMARY =============
+Dataset | seq_len | pred_len | Orig Loss | Penalty Loss | % Diff | MSE | MAE
+---------------------------------------------------------------------
+ETTh1 | 48 | 48 | 0.2975204 | ETTh1 | 48 | 72 | 0.3383707 | ETTh1 | 48 | 96 | 0.3638152 | ETTh1 | 48 | 144 | 0.3896929 | ETTh1 | 48 | 192 | 0.4169671 | ETTh2 | 48 | 48 | 0.3147982 | ETTh2 | 48 | 72 | 0.3632234 | ETTh2 | 48 | 96 | 0.4055005 | ETTh2 | 48 | 144 | 0.4887073 | ETTh2 | 48 | 192 | 0.5472910 | ETTm1 | 48 | 48 | 0.2844537 | ETTm1 | 48 | 72 | 0.3160247 | ETTm1 | 48 | 96 | 0.2984992 | ETTm1 | 48 | 144 | 0.3558734 | ETTm1 | 48 | 192 | 0.3579460 | ETTm2 | 48 | 48 | 0.1543989 | ETTm2 | 48 | 72 | 0.2000551 | ETTm2 | 48 | 96 | 0.2260865 | ETTm2 | 48 | 144 | 0.2770380 | ETTm2 | 48 | 192 | 0.3337274 | 0.25902469872886436 | 0.31524984405971773
+---------------------------------------------------------------------
+Note: All losses are averages across training epochs
+
+
+============= DETAILED TRAINING LOGS =============
+Epoch Losses - Original: 0.3424675, With Penalty: 0.4225921, Difference: 0.0801246 (23.40%)
+Epoch: 1, Steps: 268 | Train Loss: 0.3907829 Vali Loss: 0.5229658 Test Loss: 0.3500969
+Epoch Losses - Original: 0.3191283, With Penalty: 0.3425643, Difference: 0.0234360 (7.34%)
+Epoch: 2, Steps: 268 | Train Loss: 0.3128492 Vali Loss: 0.5188747 Test Loss: 0.3545437
+Epoch Losses - Original: 0.3116411, With Penalty: 0.3352630, Difference: 0.0236219 (7.58%)
+Epoch: 3, Steps: 268 | Train Loss: 0.2649454 Vali Loss: 0.5077504 Test Loss: 0.3514032
+Epoch Losses - Original: 0.3045605, With Penalty: 0.3484724, Difference: 0.0439119 (14.42%)
+Epoch: 4, Steps: 268 | Train Loss: 0.7838299 Vali Loss: 0.5108233 Test Loss: 0.3483142
+Epoch Losses - Original: 0.3001614, With Penalty: 0.3615051, Difference: 0.0613436 (20.44%)
+Epoch: 5, Steps: 268 | Train Loss: 0.2755365 Vali Loss: 0.5054315 Test Loss: 0.3518313
+Epoch Losses - Original: 0.2941764, With Penalty: 0.3645193, Difference: 0.0703428 (23.91%)
+Epoch: 6, Steps: 268 | Train Loss: 0.2904378 Vali Loss: 0.5059985 Test Loss: 0.3557894
+Epoch Losses - Original: 0.2883900, With Penalty: 0.3755696, Difference: 0.0871796 (30.23%)
+Epoch: 7, Steps: 268 | Train Loss: 0.3108584 Vali Loss: 0.5055263 Test Loss: 0.3507798
+Epoch Losses - Original: 0.2834682, With Penalty: 0.3509791, Difference: 0.0675109 (23.82%)
+Epoch: 8, Steps: 268 | Train Loss: 0.2796251 Vali Loss: 0.4987659 Test Loss: 0.3547947
+Epoch Losses - Original: 0.2798089, With Penalty: 0.4438648, Difference: 0.1640558 (58.63%)
+Epoch: 9, Steps: 268 | Train Loss: 0.2835561 Vali Loss: 0.5173711 Test Loss: 0.3578624
+Epoch Losses - Original: 0.2786447, With Penalty: 0.3466905, Difference: 0.0680457 (24.42%)
+Epoch: 10, Steps: 268 | Train Loss: 0.2700930 Vali Loss: 0.5094358 Test Loss: 0.3514747
+Epoch Losses - Original: 0.2702774, With Penalty: 0.3223183, Difference: 0.0520409 (19.25%)
+Epoch: 11, Steps: 268 | Train Loss: 0.2561975 Vali Loss: 0.5067123 Test Loss: 0.3650631
+Epoch Losses - Original: 0.3762874, With Penalty: 0.4322657, Difference: 0.0559783 (14.88%)
+Epoch: 1, Steps: 267 | Train Loss: 0.7167522 Vali Loss: 0.6209042 Test Loss: 0.3763492
+Epoch Losses - Original: 0.3535302, With Penalty: 0.3975822, Difference: 0.0440520 (12.46%)
+Epoch: 2, Steps: 267 | Train Loss: 0.3786772 Vali Loss: 0.6159728 Test Loss: 0.3719113
+Epoch Losses - Original: 0.3443308, With Penalty: 0.4168593, Difference: 0.0725286 (21.06%)
+Epoch: 3, Steps: 267 | Train Loss: 0.4222477 Vali Loss: 0.6088521 Test Loss: 0.3783295
+Epoch Losses - Original: 0.3369555, With Penalty: 0.4366972, Difference: 0.0997417 (29.60%)
+Epoch: 4, Steps: 267 | Train Loss: 0.3336317 Vali Loss: 0.6023225 Test Loss: 0.3735795
+Epoch Losses - Original: 0.3312798, With Penalty: 0.4288811, Difference: 0.0976013 (29.46%)
+Epoch: 5, Steps: 267 | Train Loss: 0.3285475 Vali Loss: 0.6007562 Test Loss: 0.3797823
+Epoch Losses - Original: 0.3264744, With Penalty: 0.4339437, Difference: 0.1074693 (32.92%)
+Epoch: 6, Steps: 267 | Train Loss: 0.3179553 Vali Loss: 0.6021022 Test Loss: 0.3762288
+Epoch Losses - Original: 0.3217353, With Penalty: 0.4038786, Difference: 0.0821432 (25.53%)
+Epoch: 7, Steps: 267 | Train Loss: 0.3217563 Vali Loss: 0.6013572 Test Loss: 0.3806563
+Epoch Losses - Original: 0.3163723, With Penalty: 0.3921739, Difference: 0.0758016 (23.96%)
+Epoch: 8, Steps: 267 | Train Loss: 0.3771038 Vali Loss: 0.6029121 Test Loss: 0.3870043
+Epoch Losses - Original: 0.4004274, With Penalty: 0.5362555, Difference: 0.1358281 (33.92%)
+Epoch: 1, Steps: 266 | Train Loss: 0.3743845 Vali Loss: 0.7064955 Test Loss: 0.3951861
+Epoch Losses - Original: 0.3756152, With Penalty: 0.4811067, Difference: 0.1054915 (28.08%)
+Epoch: 2, Steps: 266 | Train Loss: 0.3808030 Vali Loss: 0.6946682 Test Loss: 0.3914354
+Epoch Losses - Original: 0.3661029, With Penalty: 0.5018669, Difference: 0.1357640 (37.08%)
+Epoch: 3, Steps: 266 | Train Loss: 0.3149819 Vali Loss: 0.6950745 Test Loss: 0.3906728
+Epoch Losses - Original: 0.3592493, With Penalty: 0.4776076, Difference: 0.1183583 (32.95%)
+Epoch: 4, Steps: 266 | Train Loss: 0.3757205 Vali Loss: 0.6829649 Test Loss: 0.3968196
+Epoch Losses - Original: 0.3534208, With Penalty: 0.4672001, Difference: 0.1137793 (32.19%)
+Epoch: 5, Steps: 266 | Train Loss: 0.3640635 Vali Loss: 0.6847279 Test Loss: 0.3977214
+Epoch Losses - Original: 0.3480375, With Penalty: 0.4765394, Difference: 0.1285020 (36.92%)
+Epoch: 6, Steps: 266 | Train Loss: 0.3199059 Vali Loss: 0.6887270 Test Loss: 0.4021636
+Epoch Losses - Original: 0.3438531, With Penalty: 0.4522967, Difference: 0.1084436 (31.54%)
+Epoch: 7, Steps: 266 | Train Loss: 0.3390190 Vali Loss: 0.6881531 Test Loss: 0.4020690
+Epoch Losses - Original: 0.4354109, With Penalty: 0.7099846, Difference: 0.2745737 (63.06%)
+Epoch: 1, Steps: 265 | Train Loss: 1.9114501 Vali Loss: 0.8682478 Test Loss: 0.4348235
+Epoch Losses - Original: 0.4111822, With Penalty: 0.6166970, Difference: 0.2055148 (49.98%)
+Epoch: 2, Steps: 265 | Train Loss: 0.6179439 Vali Loss: 0.8568181 Test Loss: 0.4265935
+Epoch Losses - Original: 0.4033788, With Penalty: 0.6061586, Difference: 0.2027799 (50.27%)
+Epoch: 3, Steps: 265 | Train Loss: 0.3941123 Vali Loss: 0.8567030 Test Loss: 0.4279018
+Epoch Losses - Original: 0.3949664, With Penalty: 0.5628002, Difference: 0.1678338 (42.49%)
+Epoch: 4, Steps: 265 | Train Loss: 0.3290066 Vali Loss: 0.8591587 Test Loss: 0.4292198
+Epoch Losses - Original: 0.3924598, With Penalty: 0.7562335, Difference: 0.3637737 (92.69%)
+Epoch: 5, Steps: 265 | Train Loss: 0.4960369 Vali Loss: 0.8481990 Test Loss: 0.4276144
+Epoch Losses - Original: 0.3852765, With Penalty: 0.5327393, Difference: 0.1474628 (38.27%)
+Epoch: 6, Steps: 265 | Train Loss: 0.4945247 Vali Loss: 0.8456149 Test Loss: 0.4305904
+Epoch Losses - Original: 0.3799076, With Penalty: 0.4946453, Difference: 0.1147377 (30.20%)
+Epoch: 7, Steps: 265 | Train Loss: 0.8578414 Vali Loss: 0.8433095 Test Loss: 0.4239260
+Epoch Losses - Original: 0.3762717, With Penalty: 0.5045151, Difference: 0.1282434 (34.08%)
+Epoch: 8, Steps: 265 | Train Loss: 0.3468252 Vali Loss: 0.8411467 Test Loss: 0.4269339
+Epoch Losses - Original: 0.3730374, With Penalty: 0.5103538, Difference: 0.1373164 (36.81%)
+Epoch: 9, Steps: 265 | Train Loss: 0.3766435 Vali Loss: 0.8423916 Test Loss: 0.4347684
+Epoch Losses - Original: 0.3692979, With Penalty: 0.4486752, Difference: 0.0793773 (21.49%)
+Epoch: 10, Steps: 265 | Train Loss: 1.5604609 Vali Loss: 0.8528383 Test Loss: 0.4368381
+Epoch Losses - Original: 0.3654328, With Penalty: 0.4929888, Difference: 0.1275560 (34.91%)
+Epoch: 11, Steps: 265 | Train Loss: 0.3780097 Vali Loss: 0.8485121 Test Loss: 0.4361257
+Epoch Losses - Original: 0.4679644, With Penalty: 0.8819094, Difference: 0.4139450 (88.46%)
+Epoch: 1, Steps: 263 | Train Loss: 0.5201746 Vali Loss: 1.0206649 Test Loss: 0.4531146
+Epoch Losses - Original: 0.4435899, With Penalty: 0.7181433, Difference: 0.2745534 (61.89%)
+Epoch: 2, Steps: 263 | Train Loss: 0.4303670 Vali Loss: 1.0040268 Test Loss: 0.4495204
+Epoch Losses - Original: 0.4339851, With Penalty: 0.6514651, Difference: 0.2174800 (50.11%)
+Epoch: 3, Steps: 263 | Train Loss: 0.4098508 Vali Loss: 1.0103388 Test Loss: 0.4532355
+Epoch Losses - Original: 0.4266887, With Penalty: 0.6516828, Difference: 0.2249940 (52.73%)
+Epoch: 4, Steps: 263 | Train Loss: 0.4573316 Vali Loss: 1.0069018 Test Loss: 0.4463383
+Epoch Losses - Original: 0.4200384, With Penalty: 0.6102525, Difference: 0.1902141 (45.28%)
+Epoch: 5, Steps: 263 | Train Loss: 0.3881862 Vali Loss: 1.0032240 Test Loss: 0.4483490
+Epoch Losses - Original: 0.4152930, With Penalty: 0.5880498, Difference: 0.1727568 (41.60%)
+Epoch: 6, Steps: 263 | Train Loss: 0.4551193 Vali Loss: 1.0096655 Test Loss: 0.4543692
+Epoch Losses - Original: 0.4104618, With Penalty: 0.5296917, Difference: 0.1192299 (29.05%)
+Epoch: 7, Steps: 263 | Train Loss: 0.3828600 Vali Loss: 0.9977071 Test Loss: 0.4503906
+Epoch Losses - Original: 0.4059832, With Penalty: 0.5622951, Difference: 0.1563119 (38.50%)
+Epoch: 8, Steps: 263 | Train Loss: 0.3808758 Vali Loss: 0.9922012 Test Loss: 0.4523266
+Epoch Losses - Original: 0.4016885, With Penalty: 0.4936690, Difference: 0.0919805 (22.90%)
+Epoch: 9, Steps: 263 | Train Loss: 0.3649769 Vali Loss: 0.9898714 Test Loss: 0.4531655
+Epoch Losses - Original: 0.3969087, With Penalty: 0.4553426, Difference: 0.0584339 (14.72%)
+Epoch: 10, Steps: 263 | Train Loss: 0.4116215 Vali Loss: 0.9969139 Test Loss: 0.4508920
+Epoch Losses - Original: 0.3926102, With Penalty: 0.4683326, Difference: 0.0757224 (19.29%)
+Epoch: 11, Steps: 263 | Train Loss: 0.9997055 Vali Loss: 0.9903937 Test Loss: 0.4523968
+Epoch Losses - Original: 0.3883935, With Penalty: 0.4535209, Difference: 0.0651273 (16.77%)
+Epoch: 12, Steps: 263 | Train Loss: 0.4398837 Vali Loss: 0.9920097 Test Loss: 0.4477704
+Epoch Losses - Original: 0.3386744, With Penalty: 1.4994518, Difference: 1.1607775 (342.74%)
+Epoch: 1, Steps: 268 | Train Loss: 0.2843492 Vali Loss: 0.1684537 Test Loss: 0.2366272
+Epoch Losses - Original: 0.3171103, With Penalty: 1.1057736, Difference: 0.7886632 (248.70%)
+Epoch: 2, Steps: 268 | Train Loss: 0.3599305 Vali Loss: 0.1691943 Test Loss: 0.2427371
+Epoch Losses - Original: 0.3113835, With Penalty: 0.6995123, Difference: 0.3881288 (124.65%)
+Epoch: 3, Steps: 268 | Train Loss: 0.2242355 Vali Loss: 0.1731125 Test Loss: 0.2677204
+Epoch Losses - Original: 0.2920245, With Penalty: 0.4048677, Difference: 0.1128432 (38.64%)
+Epoch: 4, Steps: 268 | Train Loss: 0.2450007 Vali Loss: 0.1685785 Test Loss: 0.2484968
+Epoch Losses - Original: 0.4081622, With Penalty: 2.2438988, Difference: 1.8357366 (449.76%)
+Epoch: 1, Steps: 267 | Train Loss: 0.4234409 Vali Loss: 0.2025007 Test Loss: 0.2756384
+Epoch Losses - Original: 0.3820323, With Penalty: 1.5546614, Difference: 1.1726291 (306.95%)
+Epoch: 2, Steps: 267 | Train Loss: 0.4085061 Vali Loss: 0.1973274 Test Loss: 0.2809091
+Epoch Losses - Original: 0.3574760, With Penalty: 1.0251965, Difference: 0.6677205 (186.79%)
+Epoch: 3, Steps: 267 | Train Loss: 0.3138932 Vali Loss: 0.2028433 Test Loss: 0.2958274
+Epoch Losses - Original: 0.3432287, With Penalty: 0.6078970, Difference: 0.2646683 (77.11%)
+Epoch: 4, Steps: 267 | Train Loss: 0.2351633 Vali Loss: 0.1994700 Test Loss: 0.2831222
+Epoch Losses - Original: 0.3252177, With Penalty: 0.4140697, Difference: 0.0888519 (27.32%)
+Epoch: 5, Steps: 267 | Train Loss: 0.2487816 Vali Loss: 0.1995949 Test Loss: 0.2894704
+Epoch Losses - Original: 0.4563700, With Penalty: 2.8489188, Difference: 2.3925488 (524.26%)
+Epoch: 1, Steps: 266 | Train Loss: 21.1380188 Vali Loss: 0.2248292 Test Loss: 0.3080514
+Epoch Losses - Original: 0.4277436, With Penalty: 1.9501353, Difference: 1.5223917 (355.91%)
+Epoch: 2, Steps: 266 | Train Loss: 2.8966967 Vali Loss: 0.2235015 Test Loss: 0.3181505
+Epoch Losses - Original: 0.4023607, With Penalty: 1.1278081, Difference: 0.7254474 (180.30%)
+Epoch: 3, Steps: 266 | Train Loss: 0.3492306 Vali Loss: 0.2323579 Test Loss: 0.3222792
+Epoch Losses - Original: 0.3798053, With Penalty: 0.6870651, Difference: 0.3072598 (80.90%)
+Epoch: 4, Steps: 266 | Train Loss: 0.2751079 Vali Loss: 0.2253506 Test Loss: 0.3148490
+Epoch Losses - Original: 0.3612230, With Penalty: 0.4480685, Difference: 0.0868455 (24.04%)
+Epoch: 5, Steps: 266 | Train Loss: 0.4304541 Vali Loss: 0.2268783 Test Loss: 0.3177399
+Epoch Losses - Original: 0.5263650, With Penalty: 3.9772507, Difference: 3.4508857 (655.61%)
+Epoch: 1, Steps: 265 | Train Loss: 5.7941842 Vali Loss: 0.2628414 Test Loss: 0.3538753
+Epoch Losses - Original: 0.4980620, With Penalty: 2.6576786, Difference: 2.1596167 (433.60%)
+Epoch: 2, Steps: 265 | Train Loss: 0.8583797 Vali Loss: 0.2644629 Test Loss: 0.3554232
+Epoch Losses - Original: 0.4757284, With Penalty: 1.7163963, Difference: 1.2406679 (260.79%)
+Epoch: 3, Steps: 265 | Train Loss: 1.6990796 Vali Loss: 0.2684769 Test Loss: 0.3631957
+Epoch Losses - Original: 0.4546738, With Penalty: 1.2472034, Difference: 0.7925295 (174.31%)
+Epoch: 4, Steps: 265 | Train Loss: 4.9541872 Vali Loss: 0.2692394 Test Loss: 0.3619161
+Epoch Losses - Original: 0.5828570, With Penalty: 5.3553703, Difference: 4.7725134 (818.81%)
+Epoch: 1, Steps: 263 | Train Loss: 3.2547431 Vali Loss: 0.2871248 Test Loss: 0.3904024
+Epoch Losses - Original: 0.5564475, With Penalty: 4.1340219, Difference: 3.5775744 (642.93%)
+Epoch: 2, Steps: 263 | Train Loss: 5.8479289 Vali Loss: 0.2897387 Test Loss: 0.3944914
+Epoch Losses - Original: 0.5358755, With Penalty: 2.7841886, Difference: 2.2483130 (419.56%)
+Epoch: 3, Steps: 263 | Train Loss: 3.1831007 Vali Loss: 0.2928765 Test Loss: 0.3967796
+Epoch Losses - Original: 0.5139840, With Penalty: 1.8223859, Difference: 1.3084019 (254.56%)
+Epoch: 4, Steps: 263 | Train Loss: 0.4424529 Vali Loss: 0.2966236 Test Loss: 0.4096403
+Epoch Losses - Original: 0.3777563, With Penalty: 0.4032494, Difference: 0.0254931 (6.75%)
+Epoch: 1, Steps: 1078 | Train Loss: 0.3732162 Vali Loss: 0.5666431 Test Loss: 0.5875384
+Epoch Losses - Original: 0.3372453, With Penalty: 0.3405632, Difference: 0.0033179 (0.98%)
+Epoch: 2, Steps: 1078 | Train Loss: 0.3002844 Vali Loss: 0.5236772 Test Loss: 0.5329062
+Epoch Losses - Original: 0.3180740, With Penalty: 0.3208928, Difference: 0.0028188 (0.89%)
+Epoch: 3, Steps: 1078 | Train Loss: 0.3077814 Vali Loss: 0.5061739 Test Loss: 0.5465312
+Epoch Losses - Original: 0.3041507, With Penalty: 0.3074763, Difference: 0.0033256 (1.09%)
+Epoch: 4, Steps: 1078 | Train Loss: 0.3223540 Vali Loss: 0.5115440 Test Loss: 0.5079842
+Epoch Losses - Original: 0.2928436, With Penalty: 0.2929703, Difference: 0.0001266 (0.04%)
+Epoch: 5, Steps: 1078 | Train Loss: 0.2899072 Vali Loss: 0.4978602 Test Loss: 0.5012908
+Epoch Losses - Original: 0.2818299, With Penalty: 0.2931798, Difference: 0.0113499 (4.03%)
+Epoch: 6, Steps: 1078 | Train Loss: 0.2857818 Vali Loss: 0.5066514 Test Loss: 0.4896152
+Epoch Losses - Original: 0.2760365, With Penalty: 0.3447381, Difference: 0.0687016 (24.89%)
+Epoch: 7, Steps: 1078 | Train Loss: 0.2789321 Vali Loss: 0.4879062 Test Loss: 0.4973768
+Epoch Losses - Original: 0.2669833, With Penalty: 0.2717733, Difference: 0.0047900 (1.79%)
+Epoch: 8, Steps: 1078 | Train Loss: 0.2379134 Vali Loss: 0.4983461 Test Loss: 0.4884191
+Epoch Losses - Original: 0.2596752, With Penalty: 0.2608554, Difference: 0.0011802 (0.45%)
+Epoch: 9, Steps: 1078 | Train Loss: 0.2558800 Vali Loss: 0.4964109 Test Loss: 0.5074542
+Epoch Losses - Original: 0.2528272, With Penalty: 0.2528272, Difference: 0.0000000 (0.00%)
+Epoch: 10, Steps: 1078 | Train Loss: 0.2450807 Vali Loss: 0.4750342 Test Loss: 0.5026312
+Epoch Losses - Original: 0.2481673, With Penalty: 0.2481673, Difference: 0.0000000 (0.00%)
+Epoch: 11, Steps: 1078 | Train Loss: 0.2939628 Vali Loss: 0.4925980 Test Loss: 0.4959891
+Epoch Losses - Original: 0.2430893, With Penalty: 0.2430893, Difference: 0.0000000 (0.00%)
+Epoch: 12, Steps: 1078 | Train Loss: 0.2552755 Vali Loss: 0.4895532 Test Loss: 0.4920810
+Epoch Losses - Original: 0.2392194, With Penalty: 0.2392194, Difference: 0.0000000 (0.00%)
+Epoch: 13, Steps: 1078 | Train Loss: 0.2302846 Vali Loss: 0.4847202 Test Loss: 0.4936850
+Epoch Losses - Original: 0.3760441, With Penalty: 0.4040291, Difference: 0.0279850 (7.44%)
+Epoch: 1, Steps: 1077 | Train Loss: 0.3748323 Vali Loss: 0.5213683 Test Loss: 0.5037618
+Epoch Losses - Original: 0.3399124, With Penalty: 0.3402516, Difference: 0.0003392 (0.10%)
+Epoch: 2, Steps: 1077 | Train Loss: 0.3495065 Vali Loss: 0.5042913 Test Loss: 0.5086873
+Epoch Losses - Original: 0.3215327, With Penalty: 0.3215327, Difference: 0.0000000 (0.00%)
+Epoch: 3, Steps: 1077 | Train Loss: 0.3133077 Vali Loss: 0.5010971 Test Loss: 0.4777126
+Epoch Losses - Original: 0.3080397, With Penalty: 0.3084385, Difference: 0.0003987 (0.13%)
+Epoch: 4, Steps: 1077 | Train Loss: 0.3112445 Vali Loss: 0.4795690 Test Loss: 0.4777328
+Epoch Losses - Original: 0.2976079, With Penalty: 0.2976079, Difference: 0.0000000 (0.00%)
+Epoch: 5, Steps: 1077 | Train Loss: 0.3004147 Vali Loss: 0.4824048 Test Loss: 0.4646807
+Epoch Losses - Original: 0.2883573, With Penalty: 0.2883573, Difference: 0.0000000 (0.00%)
+Epoch: 6, Steps: 1077 | Train Loss: 0.2706595 Vali Loss: 0.4886991 Test Loss: 0.4764182
+Epoch Losses - Original: 0.2806784, With Penalty: 0.2806784, Difference: 0.0000000 (0.00%)
+Epoch: 7, Steps: 1077 | Train Loss: 0.2869655 Vali Loss: 0.4869198 Test Loss: 0.4735461
+Epoch Losses - Original: 0.3786433, With Penalty: 0.4039371, Difference: 0.0252938 (6.68%)
+Epoch: 1, Steps: 1076 | Train Loss: 0.3791785 Vali Loss: 0.5193456 Test Loss: 0.4675948
+Epoch Losses - Original: 0.3434950, With Penalty: 0.3469206, Difference: 0.0034256 (1.00%)
+Epoch: 2, Steps: 1076 | Train Loss: 0.3588397 Vali Loss: 0.4952896 Test Loss: 0.4713360
+Epoch Losses - Original: 0.3251213, With Penalty: 0.3251213, Difference: 0.0000000 (0.00%)
+Epoch: 3, Steps: 1076 | Train Loss: 0.3342206 Vali Loss: 0.4983957 Test Loss: 0.4531764
+Epoch Losses - Original: 0.3121255, With Penalty: 0.3121255, Difference: 0.0000000 (0.00%)
+Epoch: 4, Steps: 1076 | Train Loss: 0.3118805 Vali Loss: 0.4935034 Test Loss: 0.4576897
+Epoch Losses - Original: 0.3017733, With Penalty: 0.3017733, Difference: 0.0000000 (0.00%)
+Epoch: 5, Steps: 1076 | Train Loss: 0.3110741 Vali Loss: 0.4910283 Test Loss: 0.4550234
+Epoch Losses - Original: 0.2932968, With Penalty: 0.2932968, Difference: 0.0000000 (0.00%)
+Epoch: 6, Steps: 1076 | Train Loss: 0.2943253 Vali Loss: 0.4898020 Test Loss: 0.4346065
+Epoch Losses - Original: 0.2852433, With Penalty: 0.2852433, Difference: 0.0000000 (0.00%)
+Epoch: 7, Steps: 1076 | Train Loss: 0.2822804 Vali Loss: 0.4943571 Test Loss: 0.4413784
+Epoch Losses - Original: 0.2795621, With Penalty: 0.2795621, Difference: 0.0000000 (0.00%)
+Epoch: 8, Steps: 1076 | Train Loss: 0.2836088 Vali Loss: 0.4950356 Test Loss: 0.4438663
+Epoch Losses - Original: 0.2734593, With Penalty: 0.2734593, Difference: 0.0000000 (0.00%)
+Epoch: 9, Steps: 1076 | Train Loss: 0.2811464 Vali Loss: 0.4794527 Test Loss: 0.4386014
+Epoch Losses - Original: 0.2680578, With Penalty: 0.2680578, Difference: 0.0000000 (0.00%)
+Epoch: 10, Steps: 1076 | Train Loss: 0.2828734 Vali Loss: 0.5015375 Test Loss: 0.4416325
+Epoch Losses - Original: 0.2625965, With Penalty: 0.2625965, Difference: 0.0000000 (0.00%)
+Epoch: 11, Steps: 1076 | Train Loss: 0.2478946 Vali Loss: 0.4971811 Test Loss: 0.4449932
+Epoch Losses - Original: 0.2586160, With Penalty: 0.2586160, Difference: 0.0000000 (0.00%)
+Epoch: 12, Steps: 1076 | Train Loss: 0.2672743 Vali Loss: 0.4872689 Test Loss: 0.4399880
+Epoch Losses - Original: 0.4247663, With Penalty: 0.4474596, Difference: 0.0226934 (5.34%)
+Epoch: 1, Steps: 1075 | Train Loss: 0.4514995 Vali Loss: 0.6029048 Test Loss: 0.5561827
+Epoch Losses - Original: 0.3906813, With Penalty: 0.3936814, Difference: 0.0030001 (0.77%)
+Epoch: 2, Steps: 1075 | Train Loss: 0.4048806 Vali Loss: 0.5988870 Test Loss: 0.5439557
+Epoch Losses - Original: 0.3726038, With Penalty: 0.3755810, Difference: 0.0029772 (0.80%)
+Epoch: 3, Steps: 1075 | Train Loss: 0.5460598 Vali Loss: 0.5888170 Test Loss: 0.5217252
+Epoch Losses - Original: 0.3592204, With Penalty: 0.3672974, Difference: 0.0080770 (2.25%)
+Epoch: 4, Steps: 1075 | Train Loss: 0.3497014 Vali Loss: 0.5823458 Test Loss: 0.5050487
+Epoch Losses - Original: 0.3477328, With Penalty: 0.3477328, Difference: 0.0000000 (0.00%)
+Epoch: 5, Steps: 1075 | Train Loss: 0.3518654 Vali Loss: 0.5926889 Test Loss: 0.5072989
+Epoch Losses - Original: 0.3379425, With Penalty: 0.3387932, Difference: 0.0008507 (0.25%)
+Epoch: 6, Steps: 1075 | Train Loss: 0.3386691 Vali Loss: 0.5752634 Test Loss: 0.5069131
+Epoch Losses - Original: 0.3303012, With Penalty: 0.3303012, Difference: 0.0000000 (0.00%)
+Epoch: 7, Steps: 1075 | Train Loss: 0.3243505 Vali Loss: 0.5948044 Test Loss: 0.4927898
+Epoch Losses - Original: 0.3232310, With Penalty: 0.3232310, Difference: 0.0000000 (0.00%)
+Epoch: 8, Steps: 1075 | Train Loss: 0.3248275 Vali Loss: 0.5778315 Test Loss: 0.4942838
+Epoch Losses - Original: 0.3163813, With Penalty: 0.3163813, Difference: 0.0000000 (0.00%)
+Epoch: 9, Steps: 1075 | Train Loss: 0.3077196 Vali Loss: 0.5813865 Test Loss: 0.4933486
+Epoch Losses - Original: 0.4241079, With Penalty: 0.4511664, Difference: 0.0270585 (6.38%)
+Epoch: 1, Steps: 1073 | Train Loss: 0.4243887 Vali Loss: 0.6265869 Test Loss: 0.5269904
+Epoch Losses - Original: 0.3954647, With Penalty: 0.3985199, Difference: 0.0030552 (0.77%)
+Epoch: 2, Steps: 1073 | Train Loss: 0.3756637 Vali Loss: 0.6167384 Test Loss: 0.5136106
+Epoch Losses - Original: 0.3807455, With Penalty: 0.3863782, Difference: 0.0056327 (1.48%)
+Epoch: 3, Steps: 1073 | Train Loss: 0.3953740 Vali Loss: 0.6124595 Test Loss: 0.4985109
+Epoch Losses - Original: 0.3687871, With Penalty: 0.3711072, Difference: 0.0023201 (0.63%)
+Epoch: 4, Steps: 1073 | Train Loss: 0.3574251 Vali Loss: 0.6112068 Test Loss: 0.4942972
+Epoch Losses - Original: 0.3589724, With Penalty: 0.3589724, Difference: 0.0000000 (0.00%)
+Epoch: 5, Steps: 1073 | Train Loss: 0.3555288 Vali Loss: 0.6164219 Test Loss: 0.4819028
+Epoch Losses - Original: 0.3510970, With Penalty: 0.3510970, Difference: 0.0000000 (0.00%)
+Epoch: 6, Steps: 1073 | Train Loss: 0.3545760 Vali Loss: 0.6115537 Test Loss: 0.4870999
+Epoch Losses - Original: 0.3439525, With Penalty: 0.3439525, Difference: 0.0000000 (0.00%)
+Epoch: 7, Steps: 1073 | Train Loss: 0.3308004 Vali Loss: 0.6051247 Test Loss: 0.4950524
+Epoch Losses - Original: 0.3373256, With Penalty: 0.3373256, Difference: 0.0000000 (0.00%)
+Epoch: 8, Steps: 1073 | Train Loss: 0.3318522 Vali Loss: 0.5977695 Test Loss: 0.4860571
+Epoch Losses - Original: 0.3311195, With Penalty: 0.3311195, Difference: 0.0000000 (0.00%)
+Epoch: 9, Steps: 1073 | Train Loss: 0.3354268 Vali Loss: 0.6006615 Test Loss: 0.4847014
+Epoch Losses - Original: 0.3253184, With Penalty: 0.3253184, Difference: 0.0000000 (0.00%)
+Epoch: 10, Steps: 1073 | Train Loss: 0.3039827 Vali Loss: 0.6047787 Test Loss: 0.4852480
+Epoch Losses - Original: 0.3205156, With Penalty: 0.3205156, Difference: 0.0000000 (0.00%)
+Epoch: 11, Steps: 1073 | Train Loss: 0.3151290 Vali Loss: 0.6008265 Test Loss: 0.4917535
+Epoch Losses - Original: 0.1885616, With Penalty: 0.6145781, Difference: 0.4260164 (225.93%)
+Epoch: 1, Steps: 1078 | Train Loss: 0.4061439 Vali Loss: 0.1272700 Test Loss: 0.1683574
+Epoch Losses - Original: 0.1758963, With Penalty: 0.5552167, Difference: 0.3793204 (215.65%)
+Epoch: 2, Steps: 1078 | Train Loss: 1.1092765 Vali Loss: 0.1218166 Test Loss: 0.1607982
+Epoch Losses - Original: 0.1676045, With Penalty: 0.4368687, Difference: 0.2692642 (160.65%)
+Epoch: 3, Steps: 1078 | Train Loss: 0.9180504 Vali Loss: 0.1194660 Test Loss: 0.1594228
+Epoch Losses - Original: 0.1608905, With Penalty: 0.4042098, Difference: 0.2433192 (151.23%)
+Epoch: 4, Steps: 1078 | Train Loss: 0.3011648 Vali Loss: 0.1162255 Test Loss: 0.1531135
+Epoch Losses - Original: 0.1559682, With Penalty: 0.3226653, Difference: 0.1666971 (106.88%)
+Epoch: 5, Steps: 1078 | Train Loss: 0.7484689 Vali Loss: 0.1192551 Test Loss: 0.1597691
+Epoch Losses - Original: 0.1526847, With Penalty: 0.2870601, Difference: 0.1343754 (88.01%)
+Epoch: 6, Steps: 1078 | Train Loss: 0.7742417 Vali Loss: 0.1156247 Test Loss: 0.1537407
+Epoch Losses - Original: 0.1489592, With Penalty: 0.2547846, Difference: 0.1058253 (71.04%)
+Epoch: 7, Steps: 1078 | Train Loss: 1.1095981 Vali Loss: 0.1169198 Test Loss: 0.1561326
+Epoch Losses - Original: 0.1457355, With Penalty: 0.2237386, Difference: 0.0780031 (53.52%)
+Epoch: 8, Steps: 1078 | Train Loss: 0.1662329 Vali Loss: 0.1181551 Test Loss: 0.1553623
+Epoch Losses - Original: 0.1435540, With Penalty: 0.2087946, Difference: 0.0652406 (45.45%)
+Epoch: 9, Steps: 1078 | Train Loss: 0.1489917 Vali Loss: 0.1154444 Test Loss: 0.1561334
+Epoch Losses - Original: 0.1417154, With Penalty: 0.2117450, Difference: 0.0700296 (49.42%)
+Epoch: 10, Steps: 1078 | Train Loss: 0.1224462 Vali Loss: 0.1201065 Test Loss: 0.1575928
+Epoch Losses - Original: 0.1368414, With Penalty: 0.1781684, Difference: 0.0413270 (30.20%)
+Epoch: 11, Steps: 1078 | Train Loss: 0.1724242 Vali Loss: 0.1193362 Test Loss: 0.1596407
+Epoch Losses - Original: 0.1343753, With Penalty: 0.1789827, Difference: 0.0446074 (33.20%)
+Epoch: 12, Steps: 1078 | Train Loss: 0.1163663 Vali Loss: 0.1193906 Test Loss: 0.1571239
+Epoch Losses - Original: 0.2233430, With Penalty: 0.7411959, Difference: 0.5178529 (231.86%)
+Epoch: 1, Steps: 1077 | Train Loss: 0.3664042 Vali Loss: 0.1330420 Test Loss: 0.1831010
+Epoch Losses - Original: 0.2143324, With Penalty: 0.6712185, Difference: 0.4568861 (213.17%)
+Epoch: 2, Steps: 1077 | Train Loss: 0.6391494 Vali Loss: 0.1301149 Test Loss: 0.1774775
+Epoch Losses - Original: 0.2052871, With Penalty: 0.5559493, Difference: 0.3506622 (170.82%)
+Epoch: 3, Steps: 1077 | Train Loss: 4.5524763 Vali Loss: 0.1271429 Test Loss: 0.1747225
+Epoch Losses - Original: 0.1978197, With Penalty: 0.4760357, Difference: 0.2782160 (140.64%)
+Epoch: 4, Steps: 1077 | Train Loss: 0.1685234 Vali Loss: 0.1268922 Test Loss: 0.1746448
+Epoch Losses - Original: 0.1912857, With Penalty: 0.3940181, Difference: 0.2027324 (105.98%)
+Epoch: 5, Steps: 1077 | Train Loss: 0.5563515 Vali Loss: 0.1269588 Test Loss: 0.1745396
+Epoch Losses - Original: 0.1864897, With Penalty: 0.3462766, Difference: 0.1597869 (85.68%)
+Epoch: 6, Steps: 1077 | Train Loss: 0.1671732 Vali Loss: 0.1276767 Test Loss: 0.1748187
+Epoch Losses - Original: 0.1818277, With Penalty: 0.2764437, Difference: 0.0946159 (52.04%)
+Epoch: 7, Steps: 1077 | Train Loss: 0.1301638 Vali Loss: 0.1293399 Test Loss: 0.1771978
+Epoch Losses - Original: 0.2483740, With Penalty: 0.7895515, Difference: 0.5411776 (217.89%)
+Epoch: 1, Steps: 1076 | Train Loss: 0.9838826 Vali Loss: 0.1380324 Test Loss: 0.1942646
+Epoch Losses - Original: 0.2392317, With Penalty: 0.6579977, Difference: 0.4187660 (175.05%)
+Epoch: 2, Steps: 1076 | Train Loss: 0.7452927 Vali Loss: 0.1359977 Test Loss: 0.1924292
+Epoch Losses - Original: 0.2321593, With Penalty: 0.6025884, Difference: 0.3704291 (159.56%)
+Epoch: 3, Steps: 1076 | Train Loss: 0.1884522 Vali Loss: 0.1368743 Test Loss: 0.1934579
+Epoch Losses - Original: 0.2254671, With Penalty: 0.4766684, Difference: 0.2512014 (111.41%)
+Epoch: 4, Steps: 1076 | Train Loss: 0.1988922 Vali Loss: 0.1331875 Test Loss: 0.1887144
+Epoch Losses - Original: 0.2183942, With Penalty: 0.3777670, Difference: 0.1593728 (72.97%)
+Epoch: 5, Steps: 1076 | Train Loss: 0.1825091 Vali Loss: 0.1340412 Test Loss: 0.1891136
+Epoch Losses - Original: 0.2124347, With Penalty: 0.3848288, Difference: 0.1723941 (81.15%)
+Epoch: 6, Steps: 1076 | Train Loss: 0.3564037 Vali Loss: 0.1347028 Test Loss: 0.1899925
+Epoch Losses - Original: 0.2065449, With Penalty: 0.3033880, Difference: 0.0968431 (46.89%)
+Epoch: 7, Steps: 1076 | Train Loss: 1.2008886 Vali Loss: 0.1394881 Test Loss: 0.1976975
+Epoch Losses - Original: 0.3034303, With Penalty: 1.3306718, Difference: 1.0272415 (338.54%)
+Epoch: 1, Steps: 1075 | Train Loss: 2.0960308 Vali Loss: 0.1648459 Test Loss: 0.2356259
+Epoch Losses - Original: 0.2942652, With Penalty: 1.1540187, Difference: 0.8597535 (292.17%)
+Epoch: 2, Steps: 1075 | Train Loss: 1.3123053 Vali Loss: 0.1633271 Test Loss: 0.2327905
+Epoch Losses - Original: 0.2878199, With Penalty: 0.9209997, Difference: 0.6331798 (219.99%)
+Epoch: 3, Steps: 1075 | Train Loss: 1.5393269 Vali Loss: 0.1639030 Test Loss: 0.2351341
+Epoch Losses - Original: 0.2802017, With Penalty: 0.6388000, Difference: 0.3585983 (127.98%)
+Epoch: 4, Steps: 1075 | Train Loss: 2.3038068 Vali Loss: 0.1638065 Test Loss: 0.2336045
+Epoch Losses - Original: 0.2726796, With Penalty: 0.5812199, Difference: 0.3085403 (113.15%)
+Epoch: 5, Steps: 1075 | Train Loss: 1.3845773 Vali Loss: 0.1624356 Test Loss: 0.2342728
+Epoch Losses - Original: 0.2657304, With Penalty: 0.5457405, Difference: 0.2800101 (105.37%)
+Epoch: 6, Steps: 1075 | Train Loss: 0.3442424 Vali Loss: 0.1635002 Test Loss: 0.2322819
+Epoch Losses - Original: 0.2595480, With Penalty: 0.5134970, Difference: 0.2539491 (97.84%)
+Epoch: 7, Steps: 1075 | Train Loss: 0.2780868 Vali Loss: 0.1663541 Test Loss: 0.2368112
+Epoch Losses - Original: 0.2526291, With Penalty: 0.3768575, Difference: 0.1242284 (49.17%)
+Epoch: 8, Steps: 1075 | Train Loss: 0.2971941 Vali Loss: 0.1671327 Test Loss: 0.2367198
+Epoch Losses - Original: 0.3469122, With Penalty: 1.6219398, Difference: 1.2750276 (367.54%)
+Epoch: 1, Steps: 1073 | Train Loss: 1.5008803 Vali Loss: 0.1804273 Test Loss: 0.2590247
+Epoch Losses - Original: 0.3372812, With Penalty: 1.3554601, Difference: 1.0181789 (301.88%)
+Epoch: 2, Steps: 1073 | Train Loss: 0.8652319 Vali Loss: 0.1815191 Test Loss: 0.2616690
+Epoch Losses - Original: 0.3296382, With Penalty: 1.0386984, Difference: 0.7090601 (215.10%)
+Epoch: 3, Steps: 1073 | Train Loss: 1.1606143 Vali Loss: 0.1838316 Test Loss: 0.2646815
+Epoch Losses - Original: 0.3210781, With Penalty: 0.7537358, Difference: 0.4326576 (134.75%)
+Epoch: 4, Steps: 1073 | Train Loss: 0.3980909 Vali Loss: 0.1828894 Test Loss: 0.2628731
+
+============= MASK COMPARISON DETAILS =============
+------ Mask Loss Comparison ------
+Original Loss: 0.6100354
+Best Mask Loss: 0.6092065 (mask length: 3)
+Improvement: 0.0008289 (0.14%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.6929276
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3108766
+Best Mask Loss: 0.3085118 (mask length: 3)
+Improvement: 0.0023648 (0.76%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.5473610
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6763204
+Best Mask Loss: 0.6664174 (mask length: 3)
+Improvement: 0.0099031 (1.46%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.6666278
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4287322
+Best Mask Loss: 0.4240072 (mask length: 3)
+Improvement: 0.0047249 (1.10%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.9012271
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6946704
+Best Mask Loss: 0.6625137 (mask length: 6)
+Improvement: 0.0321567 (4.63%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 3.9103410
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3731611
+Best Mask Loss: 0.3680351 (mask length: 3)
+Improvement: 0.0051260 (1.37%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.8857640
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5226693
+Best Mask Loss: 0.5106107 (mask length: 3)
+Improvement: 0.0120586 (2.31%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.7285249
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6882842
+Best Mask Loss: 0.6773845 (mask length: 3)
+Improvement: 0.0108997 (1.58%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.7782564
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3958458
+Best Mask Loss: 0.3957601 (mask length: 3)
+Improvement: 0.0000858 (0.02%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.4044229
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4519831
+Best Mask Loss: 0.4457128 (mask length: 3)
+Improvement: 0.0062703 (1.39%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.0790120
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4439898
+Best Mask Loss: 0.4311522 (mask length: 3)
+Improvement: 0.0128376 (2.89%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.7277486
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4304342
+Best Mask Loss: 0.4237512 (mask length: 3)
+Improvement: 0.0066830 (1.55%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.0987334
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6732689
+Best Mask Loss: 0.6580580 (mask length: 6)
+Improvement: 0.0152109 (2.26%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.1943555
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3921417
+Best Mask Loss: 0.3906726 (mask length: 6)
+Improvement: 0.0014691 (0.37%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.5390493
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5283123
+Best Mask Loss: 0.5236962 (mask length: 15)
+Improvement: 0.0046161 (0.87%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.9899204
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5083635
+Best Mask Loss: 0.4967060 (mask length: 12)
+Improvement: 0.0116575 (2.29%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.6741141
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4052478
+Best Mask Loss: 0.4016199 (mask length: 3)
+Improvement: 0.0036280 (0.90%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.7680434
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5428854
+Best Mask Loss: 0.4801944 (mask length: 3)
+Improvement: 0.0626909 (11.55%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 6.8119769
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6509397
+Best Mask Loss: 0.5433925 (mask length: 6)
+Improvement: 0.1075472 (16.52%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 11.4056568
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6018608
+Best Mask Loss: 0.5638530 (mask length: 24)
+Improvement: 0.0380077 (6.32%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 4.4026346
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2489267
+Best Mask Loss: 0.2471494 (mask length: 3)
+Improvement: 0.0017773 (0.71%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.4266528
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2458730
+Best Mask Loss: 0.2426489 (mask length: 3)
+Improvement: 0.0032241 (1.31%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.5682834
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2561960
+Best Mask Loss: 0.2487235 (mask length: 9)
+Improvement: 0.0074725 (2.92%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.0034416
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2466580
+Best Mask Loss: 0.2280340 (mask length: 15)
+Improvement: 0.0186240 (7.55%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.1090603
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5718527
+Best Mask Loss: 0.5135286 (mask length: 6)
+Improvement: 0.0583242 (10.20%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 6.4042683
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5675319
+Best Mask Loss: 0.5318457 (mask length: 12)
+Improvement: 0.0356862 (6.29%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 4.1361513
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.7267001
+Best Mask Loss: 0.7002180 (mask length: 12)
+Improvement: 0.0264822 (3.64%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 3.3749166
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5627484
+Best Mask Loss: 0.5605680 (mask length: 6)
+Improvement: 0.0021805 (0.39%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.7807941
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3769254
+Best Mask Loss: 0.3213754 (mask length: 24)
+Improvement: 0.0555500 (14.74%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 5.9319263
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2792789
+Best Mask Loss: 0.2712148 (mask length: 3)
+Improvement: 0.0080641 (2.89%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.0856910
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 1.0572425
+Best Mask Loss: 0.8863550 (mask length: 15)
+Improvement: 0.1708875 (16.16%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 18.1459961
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 1.0418035
+Best Mask Loss: 0.9879838 (mask length: 12)
+Improvement: 0.0538197 (5.17%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 6.4237747
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.8301180
+Best Mask Loss: 0.7983627 (mask length: 9)
+Improvement: 0.0317553 (3.83%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 4.0056448
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4563094
+Best Mask Loss: 0.4321568 (mask length: 3)
+Improvement: 0.0241527 (5.29%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.8715758
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4161724
+Best Mask Loss: 0.4087577 (mask length: 6)
+Improvement: 0.0074147 (1.78%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.1576424
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6646366
+Best Mask Loss: 0.6395143 (mask length: 3)
+Improvement: 0.0251223 (3.78%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 3.1768651
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.7116410
+Best Mask Loss: 0.6157588 (mask length: 9)
+Improvement: 0.0958822 (13.47%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 10.2998590
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3306216
+Best Mask Loss: 0.3169839 (mask length: 12)
+Improvement: 0.0136378 (4.12%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.6943967
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3401426
+Best Mask Loss: 0.3192615 (mask length: 3)
+Improvement: 0.0208811 (6.14%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.4282513
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3223706
+Best Mask Loss: 0.3064058 (mask length: 6)
+Improvement: 0.0159648 (4.95%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.9188513
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.9832694
+Best Mask Loss: 0.9470347 (mask length: 3)
+Improvement: 0.0362347 (3.69%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 4.6067429
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5514743
+Best Mask Loss: 0.5330753 (mask length: 6)
+Improvement: 0.0183989 (3.34%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.3913684
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6829973
+Best Mask Loss: 0.5943364 (mask length: 18)
+Improvement: 0.0886609 (12.98%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 9.5490875
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5282359
+Best Mask Loss: 0.5190362 (mask length: 3)
+Improvement: 0.0091996 (1.74%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.4481978
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6720536
+Best Mask Loss: 0.6564505 (mask length: 3)
+Improvement: 0.0156032 (2.32%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.2323720
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.7000728
+Best Mask Loss: 0.6198180 (mask length: 12)
+Improvement: 0.0802547 (11.46%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 8.7255459
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.6630356
+Best Mask Loss: 0.6560709 (mask length: 3)
+Improvement: 0.0069647 (1.05%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.3595099
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.8430394
+Best Mask Loss: 0.8412634 (mask length: 3)
+Improvement: 0.0017760 (0.21%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.0206434
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2531555
+Best Mask Loss: 0.2492905 (mask length: 3)
+Improvement: 0.0038651 (1.53%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.6396633
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5695328
+Best Mask Loss: 0.5184218 (mask length: 27)
+Improvement: 0.0511109 (8.97%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 5.6806254
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.1569645
+Best Mask Loss: 0.1405995 (mask length: 3)
+Improvement: 0.0163650 (10.43%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.7934606
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.1649697
+Best Mask Loss: 0.1570239 (mask length: 3)
+Improvement: 0.0079458 (4.82%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.9595503
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4243295
+Best Mask Loss: 0.4006986 (mask length: 6)
+Improvement: 0.0236309 (5.57%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.7874212
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4147682
+Best Mask Loss: 0.3785377 (mask length: 15)
+Improvement: 0.0362305 (8.74%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 4.0378189
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2781353
+Best Mask Loss: 0.2182800 (mask length: 3)
+Improvement: 0.0598553 (21.52%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 6.2636619
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2944935
+Best Mask Loss: 0.2802830 (mask length: 12)
+Improvement: 0.0142104 (4.83%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.7155367
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5233387
+Best Mask Loss: 0.5008646 (mask length: 3)
+Improvement: 0.0224741 (4.29%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.7707438
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5093666
+Best Mask Loss: 0.4221525 (mask length: 12)
+Improvement: 0.0872141 (17.12%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 9.2307816
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5699128
+Best Mask Loss: 0.5148137 (mask length: 30)
+Improvement: 0.0550991 (9.67%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 6.0798259
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.1865262
+Best Mask Loss: 0.1823035 (mask length: 3)
+Improvement: 0.0042227 (2.26%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.6087953
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2978832
+Best Mask Loss: 0.2892844 (mask length: 3)
+Improvement: 0.0085987 (2.89%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.1577576
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4487036
+Best Mask Loss: 0.3994330 (mask length: 9)
+Improvement: 0.0492705 (10.98%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 5.3757577
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3387989
+Best Mask Loss: 0.3222505 (mask length: 12)
+Improvement: 0.0165484 (4.88%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.9936384
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3767106
+Best Mask Loss: 0.3737027 (mask length: 18)
+Improvement: 0.0030078 (0.80%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.6774935
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4118783
+Best Mask Loss: 0.3927622 (mask length: 3)
+Improvement: 0.0191161 (4.64%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.3234856
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2924909
+Best Mask Loss: 0.2786320 (mask length: 3)
+Improvement: 0.0138589 (4.74%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.6783794
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2493196
+Best Mask Loss: 0.2456512 (mask length: 3)
+Improvement: 0.0036684 (1.47%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.6161563
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3202447
+Best Mask Loss: 0.3053569 (mask length: 3)
+Improvement: 0.0148878 (4.65%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.8090286
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2435089
+Best Mask Loss: 0.2344507 (mask length: 3)
+Improvement: 0.0090583 (3.72%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.1493372
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4006634
+Best Mask Loss: 0.3009610 (mask length: 12)
+Improvement: 0.0997025 (24.88%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 10.3709106
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2391747
+Best Mask Loss: 0.2257136 (mask length: 3)
+Improvement: 0.0134611 (5.63%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.5852860
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3910998
+Best Mask Loss: 0.3638636 (mask length: 12)
+Improvement: 0.0272362 (6.96%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 3.1147192
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3003555
+Best Mask Loss: 0.2933105 (mask length: 3)
+Improvement: 0.0070450 (2.35%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.0048585
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3268211
+Best Mask Loss: 0.3201748 (mask length: 3)
+Improvement: 0.0066464 (2.03%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.9914576
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2322392
+Best Mask Loss: 0.2218874 (mask length: 3)
+Improvement: 0.0103518 (4.46%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.2674229
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2383839
+Best Mask Loss: 0.2207057 (mask length: 3)
+Improvement: 0.0176782 (7.42%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.0061996
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3249812
+Best Mask Loss: 0.3207693 (mask length: 3)
+Improvement: 0.0042120 (1.30%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.7461774
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2674231
+Best Mask Loss: 0.2671667 (mask length: 6)
+Improvement: 0.0002564 (0.10%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.2930620
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2578674
+Best Mask Loss: 0.2538640 (mask length: 3)
+Improvement: 0.0040035 (1.55%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.6582140
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2635964
+Best Mask Loss: 0.2576706 (mask length: 3)
+Improvement: 0.0059258 (2.25%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.8561798
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.7541934
+Best Mask Loss: 0.6688184 (mask length: 3)
+Improvement: 0.0853750 (11.32%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 9.2916946
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2450921
+Best Mask Loss: 0.2273729 (mask length: 3)
+Improvement: 0.0177192 (7.23%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.0170131
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2913159
+Best Mask Loss: 0.2792434 (mask length: 3)
+Improvement: 0.0120726 (4.14%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.4985722
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3579154
+Best Mask Loss: 0.3368771 (mask length: 3)
+Improvement: 0.0210383 (5.88%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 2.4617476
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4421466
+Best Mask Loss: 0.4318323 (mask length: 9)
+Improvement: 0.0103143 (2.33%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.4735812
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4551636
+Best Mask Loss: 0.3552768 (mask length: 6)
+Improvement: 0.0998869 (21.95%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 10.4438505
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 1.1457530
+Best Mask Loss: 1.0076221 (mask length: 12)
+Improvement: 0.1381309 (12.06%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 14.9588432
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4605000
+Best Mask Loss: 0.4491400 (mask length: 6)
+Improvement: 0.0113600 (2.47%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 1.5965019
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5156600
+Best Mask Loss: 0.4830977 (mask length: 18)
+Improvement: 0.0325623 (6.31%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 3.7718916
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5267717
+Best Mask Loss: 0.4556589 (mask length: 3)
+Improvement: 0.0711128 (13.50%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 7.6380496
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2628234
+Best Mask Loss: 0.2612650 (mask length: 3)
+Improvement: 0.0015583 (0.59%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.4186567
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5009689
+Best Mask Loss: 0.4555512 (mask length: 3)
+Improvement: 0.0454177 (9.07%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 5.0427384
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.5754275
+Best Mask Loss: 0.4874017 (mask length: 15)
+Improvement: 0.0880258 (15.30%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 9.3780050
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2237857
+Best Mask Loss: 0.2231697 (mask length: 3)
+Improvement: 0.0006159 (0.28%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.2853766
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.2756232
+Best Mask Loss: 0.2748239 (mask length: 3)
+Improvement: 0.0007993 (0.29%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.3555530
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.7166919
+Best Mask Loss: 0.6489599 (mask length: 30)
+Improvement: 0.0677320 (9.45%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 7.4898958
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4829493
+Best Mask Loss: 0.3911181 (mask length: 15)
+Improvement: 0.0918312 (19.01%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 9.6660700
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.4637590
+Best Mask Loss: 0.3922074 (mask length: 15)
+Improvement: 0.0715517 (15.43%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 7.6189241
+---------------------------------
+--
+------ Mask Loss Comparison ------
+Original Loss: 0.3648011
+Best Mask Loss: 0.3638256 (mask length: 27)
+Improvement: 0.0009755 (0.27%)
+Applied Penalty Factor: 100
+Final Loss with Penalty: 0.4623531
+---------------------------------
+
+============= FINAL TEST RESULTS =============
+mse:0.1561334105574616, mae:0.24723416236823037
+mse:0.17464483095205593, mae:0.26351270625732676
+mse:0.18871444870723939, mae:0.2702011764819043
+mse:0.23427278784760128, mae:0.3005662283526894
+mse:0.25902469872886436, mae:0.31524984405971773
