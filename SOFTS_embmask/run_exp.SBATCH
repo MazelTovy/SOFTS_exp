@@ -42,10 +42,5 @@ echo "JOB ID: ${SLURM_JOB_ID}" > "${SUMMARY_FILE}"
 echo "Run completed at: $(date)" >> "${SUMMARY_FILE}"
 echo "===========================================" >> "${SUMMARY_FILE}"
 
-# Extract settings and results
-grep -E "^.*long_term_forecast.*|^mse:" "${OUTFILE}" >> "${SUMMARY_FILE}"
-
-echo "Summary extraction completed"
-
 # Check job status
 sacct -j $SLURM_JOB_ID --format=JobID,State,ExitCode,Reason 
