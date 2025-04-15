@@ -51,13 +51,16 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         对多个窗口长度的掩码进行系统分析，找出问题数据点
         返回：
         1. 问题得分 - 指示每个时间点的问题严重性
-        2. 最优掩码长度 - 导致最大性能改善的掩码长度
-        3. 最优掩码后的嵌入 - 用于一致性约束
+        2. 所有有效掩码信息 - 包括掩码长度、改进程度和对应的嵌入
+        3. 原始MSE损失
         """
         batch_size, seq_len, _ = batch_x.shape
         
         # 存储每个掩码尝试的结果
         original_outputs, original_embeddings = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
+        # 记录embeddings的形状用于调试
+        embedding_shape = original_embeddings.shape
+        
         f_dim = -1 if self.args.features == 'MS' else 0
         original_outputs = original_outputs[:, -self.args.pred_len:, f_dim:]
         original_mse = criterion(original_outputs, batch_y)
@@ -65,15 +68,10 @@ class Exp_Long_Term_Forecast(Exp_Basic):
         # 问题得分矩阵 - 初始化为0
         problem_scores = torch.zeros((batch_size, seq_len), device=self.device)
         
-        # 存储所有掩码结果
-        all_masked_mse = []
-        all_masked_embeddings = []
+        # 存储所有有效掩码（那些导致性能改善的掩码）
+        effective_masks = []
         
         # 系统尝试不同的掩码长度
-        best_improvement = 0
-        best_mask_len = 0
-        best_embeddings = None
-        
         for ratio in self.mask_ratios:
             mask_len = int(seq_len * ratio)
             if mask_len == 0:
@@ -88,36 +86,32 @@ class Exp_Long_Term_Forecast(Exp_Basic):
             # 计算改进程度
             improvement = original_mse - masked_mse
             
-            # 存储结果
-            all_masked_mse.append(masked_mse)
-            all_masked_embeddings.append(masked_embeddings)
-            
-            # 如果掩码后性能更好，更新问题得分
+            # 如果改进是正数，即掩码后的MSE损失低于原始损失，进行累积
             if improvement > 0:
-                # 对被掩码的时间步，增加其问题得分
-                # 问题得分增加量与性能改进成正比
+                # 计算要记录到problem_scores的值
+                # 使其与改进程度成正比
                 improvement_ratio = improvement / original_mse
+                
+                # 记录到每个序列每个被掩码的时间步
+                # 越近的时间步影响越大
                 for t in range(mask_len):
-                    # 更近的时间点问题影响更大
                     problem_scores[:, t] += improvement_ratio * (1.0 - t/mask_len)
                 
-                # 更新最佳掩码
-                if improvement > best_improvement:
-                    best_improvement = improvement
-                    best_mask_len = mask_len
-                    best_embeddings = masked_embeddings
+                # 保存这个有效掩码
+                # 只记录改进了性能的掩码信息
+                effective_masks.append({
+                    'mask_len': mask_len,
+                    'improvement': improvement.item(),  # 使用item()以便在Python中使用
+                    'improvement_ratio': improvement_ratio.item(),
+                    'embeddings': masked_embeddings,
+                })
         
-        # 如果没有找到改进，使用原始嵌入
-        if best_embeddings is None:
-            best_embeddings = original_embeddings
-            best_mask_len = 0
-            
         # 正则化问题得分
         max_scores = torch.max(problem_scores, dim=1, keepdim=True)[0]
         if torch.any(max_scores > 0):
             problem_scores = problem_scores / (max_scores + 1e-7)
             
-        return problem_scores, best_mask_len, best_embeddings, original_mse
+        return problem_scores, effective_masks, original_embeddings, original_mse, embedding_shape
 
     def vali(self, vali_data, vali_loader, criterion):
         total_loss = AverageMeter()
@@ -177,7 +171,25 @@ class Exp_Long_Term_Forecast(Exp_Basic):
 
         if self.args.use_amp:
             scaler = torch.cuda.amp.GradScaler()
-
+            
+        # 调试信息：输出第一个批次的嵌入维度
+        if len(train_loader) > 0:
+            debug_batch = next(iter(train_loader))
+            debug_x, debug_y, debug_x_mark, debug_y_mark = debug_batch
+            debug_x = debug_x.float().to(self.device)
+            if debug_x_mark is not None:
+                debug_x_mark = debug_x_mark.float().to(self.device)
+            debug_dec_inp = torch.zeros_like(debug_y[:, -self.args.pred_len:, :]).float()
+            debug_dec_inp = torch.cat([debug_y[:, :self.args.label_len, :], debug_dec_inp], dim=1).float().to(self.device)
+            if debug_y_mark is not None:
+                debug_y_mark = debug_y_mark.float().to(self.device)
+            
+            # 获取嵌入信息
+            with torch.no_grad():
+                _, debug_embed = self.model(debug_x, debug_x_mark, debug_dec_inp, debug_y_mark)
+                print("DEBUG - Embedding shape:", debug_embed.shape)
+                print("DEBUG - Input shape:", debug_x.shape)
+        
         for epoch in range(self.args.train_epochs):
             iter_count = 0
             train_loss = []
@@ -208,12 +220,12 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 if self.args.use_amp:
                     with torch.cuda.amp.autocast():
                         # 多窗口掩码分析
-                        problem_scores, best_mask_len, best_masked_embeddings, original_mse = self._multi_window_mask_analysis(
+                        problem_scores, effective_masks, original_embeddings, original_mse, embedding_shape = self._multi_window_mask_analysis(
                             batch_x, batch_x_mark, dec_inp, batch_y_mark, target_y, criterion
                         )
                         
                         # 获取原始输出和嵌入
-                        outputs, original_embeddings = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
+                        outputs, _ = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
                         if self.args.output_attention:
                             outputs = outputs[0]
                         outputs = outputs[:, -self.args.pred_len:, f_dim:]
@@ -221,27 +233,47 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                         # 基础MSE损失
                         mse_loss = criterion(outputs, target_y)
                         
-                        # 计算Zero Mask Loss - 对问题数据点的惩罚
-                        # 如果问题得分高，增加惩罚
-                        zero_mask_loss = torch.mean(problem_scores) * (original_mse - mse_loss).abs()
+                        # 计算Zero Mask Loss - 问题数据点的惩罚
+                        zero_mask_loss = torch.mean(problem_scores) * torch.abs(original_mse - mse_loss)
                         
-                        # 计算一致性损失 - 一致性损失对问题区域要求较低
-                        # 用(1-problem_scores)作为权重，问题区域权重低
-                        weights = 1.0 - problem_scores.mean(dim=1, keepdim=True).unsqueeze(-1)  # [B, 1, 1]
-                        weighted_diff = (original_embeddings - best_masked_embeddings) * weights
-                        consistency_loss = torch.mean(weighted_diff ** 2)
+                        # 计算针对性一致性损失 - 对每个有效掩码分别计算一致性损失
+                        consistency_loss = torch.tensor(0.0, device=self.device)
+                        
+                        if effective_masks:  # 如果存在有效掩码
+                            # 获取嵌入的实际形状
+                            batch_size, num_vars, d_model = embedding_shape
+                            
+                            # 总改进程度，用于归一化权重
+                            total_improvement = sum([mask_info['improvement'] for mask_info in effective_masks])
+                            
+                            for mask_info in effective_masks:
+                                mask_len = mask_info['mask_len']
+                                improvement = mask_info['improvement']
+                                masked_embeddings = mask_info['embeddings']
+                                
+                                # 计算掩码权重 - 改进越多，权重越大
+                                mask_weight = improvement / total_improvement if total_improvement > 0 else 1.0
+                                
+                                # 计算一致性损失 - 直接比较嵌入表示
+                                # SOFTS模型中的嵌入形状为 [batch_size, num_variables, d_model]
+                                # 不再使用按时间步的权重，直接计算嵌入差异
+                                embedding_diff = torch.mean((original_embeddings - masked_embeddings) ** 2)
+                                mask_consistency_loss = embedding_diff * mask_weight
+                                
+                                # 累加到总一致性损失
+                                consistency_loss = consistency_loss + mask_consistency_loss
                         
                         # 总损失
                         loss = mse_loss + self.beta * zero_mask_loss + self.gamma * consistency_loss
 
                 else:
                     # 多窗口掩码分析
-                    problem_scores, best_mask_len, best_masked_embeddings, original_mse = self._multi_window_mask_analysis(
+                    problem_scores, effective_masks, original_embeddings, original_mse, embedding_shape = self._multi_window_mask_analysis(
                         batch_x, batch_x_mark, dec_inp, batch_y_mark, target_y, criterion
                     )
                     
                     # 获取原始输出和嵌入
-                    outputs, original_embeddings = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
+                    outputs, _ = self.model(batch_x, batch_x_mark, dec_inp, batch_y_mark)
                     if self.args.output_attention:
                         outputs = outputs[0]
                     outputs = outputs[:, -self.args.pred_len:, f_dim:]
@@ -249,15 +281,35 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                     # 基础MSE损失
                     mse_loss = criterion(outputs, target_y)
                     
-                    # 计算Zero Mask Loss - 对问题数据点的惩罚
-                    # 如果问题得分高，增加惩罚
-                    zero_mask_loss = torch.mean(problem_scores) * (original_mse - mse_loss).abs()
+                    # 计算Zero Mask Loss - 问题数据点的惩罚
+                    zero_mask_loss = torch.mean(problem_scores) * torch.abs(original_mse - mse_loss)
                     
-                    # 计算一致性损失 - 一致性损失对问题区域要求较低
-                    # 用(1-problem_scores)作为权重，问题区域权重低
-                    weights = 1.0 - problem_scores.mean(dim=1, keepdim=True).unsqueeze(-1)  # [B, 1, 1]
-                    weighted_diff = (original_embeddings - best_masked_embeddings) * weights
-                    consistency_loss = torch.mean(weighted_diff ** 2)
+                    # 计算针对性一致性损失 - 对每个有效掩码分别计算一致性损失
+                    consistency_loss = torch.tensor(0.0, device=self.device)
+                    
+                    if effective_masks:  # 如果存在有效掩码
+                        # 获取嵌入的实际形状
+                        batch_size, num_vars, d_model = embedding_shape
+                        
+                        # 总改进程度，用于归一化权重
+                        total_improvement = sum([mask_info['improvement'] for mask_info in effective_masks])
+                        
+                        for mask_info in effective_masks:
+                            mask_len = mask_info['mask_len']
+                            improvement = mask_info['improvement']
+                            masked_embeddings = mask_info['embeddings']
+                            
+                            # 计算掩码权重 - 改进越多，权重越大
+                            mask_weight = improvement / total_improvement if total_improvement > 0 else 1.0
+                            
+                            # 计算一致性损失 - 直接比较嵌入表示
+                            # SOFTS模型中的嵌入形状为 [batch_size, num_variables, d_model]
+                            # 不再使用按时间步的权重，直接计算嵌入差异
+                            embedding_diff = torch.mean((original_embeddings - masked_embeddings) ** 2)
+                            mask_consistency_loss = embedding_diff * mask_weight
+                            
+                            # 累加到总一致性损失
+                            consistency_loss = consistency_loss + mask_consistency_loss
                     
                     # 总损失
                     loss = mse_loss + self.beta * zero_mask_loss + self.gamma * consistency_loss
@@ -265,9 +317,18 @@ class Exp_Long_Term_Forecast(Exp_Basic):
                 if (i + 1) % 100 == 0:
                     loss_float = loss.item()
                     train_loss.append(loss_float)
-                    print("\titers: {0}, epoch: {1} | loss: {2:.7f} | mse: {3:.7f} | zero_mask: {4:.7f} | consistency: {5:.7f} | best_mask_len: {6}".format(
+                    num_effective_masks = len(effective_masks) if effective_masks else 0
+                    mask_lens = [m['mask_len'] for m in effective_masks] if effective_masks else []
+                    
+                    print("\titers: {0}, epoch: {1} | loss: {2:.7f} | mse: {3:.7f} | zero_mask: {4:.7f} | consistency: {5:.7f}".format(
                         i + 1, epoch + 1, loss_float, mse_loss.item(), 
-                        zero_mask_loss.item(), consistency_loss.item(), best_mask_len))
+                        zero_mask_loss.item(), consistency_loss.item()))
+                    print("\tEmbedding shape: {0}, Effective masks: {1}, lengths: {2}".format(
+                        embedding_shape, num_effective_masks, mask_lens))
+                    
+                    if effective_masks:
+                        print("\tMask improvements:", ["{:.6f}".format(m['improvement']) for m in effective_masks])
+                    
                     speed = (time.time() - time_now) / iter_count
                     left_time = speed * ((self.args.train_epochs - epoch) * train_steps - i)
                     print('\tspeed: {:.4f}s/iter; left time: {:.4f}s'.format(speed, left_time))
