@@ -1,0 +1,1588 @@
+\documentclass{article}
+% if you need to pass options to natbib, use, e.g.:
+%     \PassOptionsToPackage{numbers, compress}{natbib}
+% before loading neurips_2025
+
+
+% ready for submission
+%\usepackage{neurips_2025}
+
+
+% to compile a preprint version, e.g., for submission to arXiv, add add the
+% [preprint] option:
+%     \usepackage[preprint]{neurips_2025}
+
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+%     \usepackage[final]{neurips_2025}
+
+
+% to avoid loading the natbib package, add option nonatbib:
+\usepackage[nonatbib]{neurips_2025}
+\usepackage[numbers]{natbib}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{graphicx}       % for \resizebox
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{xcolor}         % colors
+\usepackage{CJKutf8}
+\usepackage{enumitem}
+\usepackage{booktabs} % 用于更好的表格线
+\usepackage{multirow}
+\usepackage{amsmath}
+\usepackage{cleveref}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{wrapfig}
+% \usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{caption}
+\usepackage{marvosym}
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+% \usepackage{fontspec}
+\usepackage{amssymb}
+\usepackage{float}    % For H float placement (if needed)
+\usepackage{footnote}
+\makesavenoteenv{table}
+
+\Crefname{figure}{Figure}{Figures}
+\newcommand{\bA}{{\boldsymbol{A}}}
+\newcommand{\x}{{\boldsymbol{x}}}
+\newcommand{\y}{{\boldsymbol{y}}}
+\newcommand{\w}{{\boldsymbol{w}}}
+\newcommand{\W}{{\boldsymbol{W}}}
+\newcommand{\A}{{\boldsymbol{A}}}
+\newcommand{\X}{{\boldsymbol{X}}}
+\newcommand{\Y}{{\boldsymbol{Y}}}
+\newcommand{\bS}{{\boldsymbol{S}}}
+\newcommand{\bO}{{\boldsymbol{O}}}
+\newcommand{\bP}{{\boldsymbol{P}}}
+\newcommand{\bF}{{\boldsymbol{F}}}
+\newcommand{\B}{{\boldsymbol{B}}}
+\newcommand{\cX}{{\mathcal{X}}}
+\newcommand{\cR}{{\mathcal{R}}}
+\newcommand{\cY}{{\mathcal{Y}}}
+\newcommand{\boldres}[1]{{\textbf{\textcolor{red}{#1}}}}
+\newcommand{\secondres}[1]{{\underline{\textcolor{blue}{#1}}}}
+\def\Eg{\emph{E.g.}\xspace}
+\def\eg{\emph{e.g.}\xspace}
+\def\ie{\emph{i.e.}\xspace} 
+\def\Ie{\emph{I.e.}\xspace}
+\newcommand{\lrz}[1]{\begin{CJK}{UTF8}{gbsn}\textcolor{red}{[(lrz): #1]}\end{CJK}}
+\newcommand{\yy}[1]{\begin{CJK}{UTF8}{gbsn}\textcolor{violet}{[(yy): #1]}\end{CJK}}
+\newcommand{\jj}[1]{\begin{CJK}{UTF8}{gbsn}\textcolor{purple}{[(jj): #1]}\end{CJK}}
+\newcommand{\cjr}[1]{\begin{CJK}{UTF8}{gbsn}\textcolor{red}{[(cjr): #1]}\end{CJK}}
+\newcommand{\omse}{MSE}
+\newcommand{\idealmse}{MSE*}
+\newcommand{\newmse}{MSE*}
+\newcommand{\newmae}{MAE*}
+\newcommand{\ratio}{Ratio}
+
+\newcommand{\mse}{MSE}
+\newcommand{\mae}{MAE}
+
+\newcommand{\orim}{Original}
+\newcommand{\ourm}{AMRC}
+
+\usepackage{caption}
+\captionsetup[figure]{font=normalsize}     
+\captionsetup[subfigure]{font=small}
+
+\title{Abstain Mask Retain Core: Time Series Prediction by Adaptive Masking Loss with Representation Consistency}
+
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to LaTeX to determine where to break the
+% lines. Using \AND forces a line break at that point. So, if LaTeX puts 3 of 4
+% authors names on the first line, and the last on the second line, try using
+% \AND instead of \And before the third author name.
+
+
+\author{%
+  David S.~Hippocampus\thanks{Use footnote for providing further information
+    about author (webpage, alternative address)---\emph{not} for acknowledging
+    funding agencies.} \\
+  Department of Computer Science\\
+  Cranberry-Lemon University\\
+  Pittsburgh, PA 15213 \\
+  \texttt{hippo@cs.cranberry-lemon.edu} \\
+  % examples of more authors
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \AND
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+  % \And
+  % Coauthor \\
+  % Affiliation \\
+  % Address \\
+  % \texttt{email} \\
+}
+
+
+\begin{document}
+
+
+\maketitle
+
+
+\begin{abstract}
+Time series forecasting plays a pivotal role in critical domains such as energy management and financial markets. Although deep learning-based approaches (e.g., MLP, RNN, Transformer) have achieved remarkable progress, the prevailing "long-sequence information gain hypothesis" exhibits inherent limitations. Through systematic experimentation, this study reveals a counterintuitive phenomenon: appropriately truncating historical data can paradoxically enhance prediction accuracy, indicating that existing models learn substantial redundant features (e.g., noise or irrelevant fluctuations) during training, thereby compromising effective signal extraction. Building upon information bottleneck theory, we propose an innovative solution termed Adaptive Masking Loss with Representation Consistency (AMRC), which features two core components: 1) Dynamic masking loss, which adaptively identified highly discriminative temporal segments to guide gradient descent during model training; 2) Representation consistency constraint, which stabilized the mapping relationships among inputs, labels, and predictions. Experimental results demonstrate that AMRC effectively suppresses redundant feature learning while significantly improving model performance. This work not only challenges conventional assumptions in temporal modeling but also provides novel theoretical insights and methodological breakthroughs for developing efficient and robust forecasting models. We have made our code available at \url{https://anonymous.4open.science/r/AMRC/}.
+\end{abstract}
+\vspace{-1em}
+\section{Introduction}
+Time series forecasting, as a pivotal technology in critical domains such as energy management and financial markets, directly influences decision-making quality and economic efficiency \cite{timesurvey, timesurvey2,timesurvey3,timesurvey4,timesurvey5}. Recent breakthroughs in deep learning have driven revolutionary advancements in time series prediction.  Contemporary frameworks including Multilayer Perceptron (MLP)-based architectures~\cite{N-BEATS, DLinear, tsmixer, fits,tide,frequency}, Recurrent Neural Networks (RNNs) with their variants~\cite{segrnn, lstmlong, rnn_time}, and attention mechanism-based models exemplified by the Transformer~\cite{autotransformer, informer,crossformer, PatchTST,fedformer,pathformer,tactis}, have achieved remarkable breakthroughs in modeling complex temporal patterns through the construction of elaborate hierarchical temporal dependencies.
+
+Current mainstream forecasting models predominantly adhere to the "long-sequence information gain hypothesis," which posits that extending historical data length enhances the availability of temporal dependencies~\cite{transformer_effective, longtime}. However, through systematic experimental analysis, this study challenges this conventional assumption. As shown in Table \ref{tab:rq2_results}, we observed a counterintuitive phenomenon across multiple benchmark datasets and diverse model architectures: appropriately truncating early segments of input sequences can significantly improve prediction accuracy. This finding reveals a critical issue in modern predictive models: during training, models inadvertently capture a substantial number of redundant features. These features not only fail to enhance performance but also interfere with the learning process, thereby limiting the models' potential to achieve optimal results.
+
+Through systematic analysis, we have identified two typical manifestations of redundant features and their underlying mechanisms. First, input truncation optimization experiments (as shown in Figure \ref{fig:merged_output_tsne} and Table \ref{tab:rq2_results}) demonstrate that selectively masking partial historical data can significantly improve model prediction performance. This phenomenon reveals the current model's inefficient utilization of long historical windows. Second, representation similarity analysis (as illustrated in Figure~\ref{fig:input_tsne}) shows that both the model's prediction results and intermediate embeddings exhibit an abnormally concentrated distribution, which significantly deviates from the natural dispersion characteristics of the input and label. Collectively, these observations indicate that existing models exhibit low efficiency when processing long historical windows, often encoding substantial noise or irrelevant variables rather than truly predictive signals.
+
+Building upon information bottleneck theory~\cite{deep_learning_information_bottleneck, tishby2000informationbottleneckmethod, slonim1999agglomerative, hu2024survey}, this study proposes an innovative method called Adaptive Masking Loss with Representation Consistency (AMRC). The core methodology comprises: 1) An adaptive masking mechanism that dynamically identifies key segments with high discriminative power in sequential data and leverages these informative segments to guide the gradient optimization process (as illustrated in Fig \ref{fig:aml}) ;  
+2) A representation consistency constraint that establishes stable mapping relationships among the input feature space, label space, and predicted outputs, thereby effectively enhancing the model's generalization capability. Experimental results (as shown in Table \ref{tab:aml_results}) demonstrate that the AMRC method significantly reduces the complexity of the training solution space by suppressing the model's reliance on redundant features, fully exploits the performance potential of the model architecture, and consequently improves prediction accuracy.
+
+The primary contributions of this study include:
+\begin{itemize}[leftmargin=*, itemsep=0pt, topsep=1pt]
+    \item \textbf{Theoretical Insight:} Through rigorous experimental validation, We demonstrate that existing time series forecasting models are prone to learning redundant features, which in turn constrain their performance. Building on the theory of information bottlenecks, we construct a novel theoretical framework for time series modeling and propose an innovative optimization pathway, offering a new theoretical perspective for advancing the field of time series forecasting.
+    \item \textbf{Methodological Innovation:} We propose an optimization framework  Adaptive Masking Loss with Representation Consistency. By dynamically selecting discriminative temporal segments to guide gradient descent (as illustrated in Figure \ref{fig:mount}) while enforcing input-label-prediction consistency, our method effectively suppresses redundant feature learning. Extensive experiments demonstrate consistent performance gains across diverse benchmarks and architectures.
+\end{itemize}
+Our work advances the understanding of temporal pattern learning mechanisms while offering a practical pathway to enhance the efficiency and reliability of time series forecasting systems.
+\vspace{-1.5mm}
+\section{Analysis of Redundant Feature Learning }
+\label{Analysis}
+Given a multivariate time series \( \mathbf{X} \in \mathbb{R}^{T \times D} \), where \( T \) is the number of timesteps and \( D \) is the number of variables, the objective of time series forecasting is to learn a mapping function \( f_{\theta} \) that transforms historical observations \( \mathbf{X}_{t-L:t} \in \mathbb{R}^{L \times D} \) (where \( L \) denotes the input length ) into future values \( \mathbf{X}_{t+1:t+H} \in \mathbb{R}^{H \times D} \) (where \( H \) represents the forecasting horizon).
+
+Conventional time series forecasting models follow the long-sequence information gain hypothesis\cite{transformerxl,informer,longnet,bigbird}, which holds that increasing the input length \( L \) improves forecasting accuracy. However, our experiments (Table \ref{tab:rq2_results}) on multiple standard benchmarks reveal a counterintuitive result: truncating the input—such as masking the first \( k \) timesteps—often improves forecasting performance, which is measured by Mean Squared Error (MSE).  We found that models tend to learn redundant features, which degrade model performance even after convergence. This finding is supported by two key observations:
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{fig/mountain_climb.pdf}
+    \caption{Illustration of the effect of AMRC method. Without regularization, the model tends to overfit redundant input features, leading to suboptimal convergence. By suppressing redundant input features, AMRC restructures the optimization landscape, promoting more efficient representation learning and facilitating better convergence.}
+    \label{fig:mount}
+\end{figure}
+
+\subsection{Input Truncation Optimization}
+\label{Truncation}
+Based on the baseline model configuration (input length \( L = 48 \), forecasting horizon \( H = 48 \)), we design an input truncation comparative experiment by applying a masking operator \( \mathcal{M}_k(\cdot) \) to the input sequence. When we have an input sequence of length $L$ at time step $t$, denoted as $\boldsymbol{X}_t^{(L)}$, the masking operator $\mathcal{M}_k(\cdot)$ is mathematically defined as:
+\begin{equation}
+\mathcal{M}_k(\boldsymbol{X}^{(L)}_t) = 
+\begin{cases} 
+0 & \text{if } i \leq k \\
+\boldsymbol{X}^{(L)}_t & \text{otherwise}
+\end{cases}
+\end{equation}
+Here, \( k \in \{1, \ldots, L\} \) denotes the masking step size. 
+
+To probe redundant features, we employ an Optimal Masking strategy: Given an input sequence of length $L$, we generate $L$ masked variants $\{\mathcal{M}_k(\boldsymbol{X}_t^{(L)})\}_{k=1}^L$ (zero-padded to preserve dimensionality). For instance, $k=5$ yields $L'=43$ (first 5 positions zeroed). The optimal mask length $k^*$ is selected as the configuration minimizing MSE, thereby defining the theoretical upper bound for redundancy elimination:
+\begin{equation}
+k^* = \operatorname*{arg\,min}_{k \in \{1, 2, \ldots, L\}} \, \mathbb{E} \left[ \left\| f_\theta \big( \mathcal{M}_k( \boldsymbol{X}^{(L)}_t ) \big) - \boldsymbol{Y}^{(H)}_t \right\|^2 \right]
+\end{equation}
+
+\begin{table*}[htbp]
+\centering
+\caption{Performance Gains via Optimal Masking Across Time Series Models. Ratio quantifies the percentage of training samples demonstrating prediction error reduction through Optimal Masking, calculated as \emph{number of masked series/number of total series $\times 100\%$}}.
+% \frac{N_{\text{reduced}}}{N_{\text{total}}} \times 100\%$.}
+\label{tab:rq2_results}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{llccccccccccccc}
+\toprule
+\multicolumn{2}{c}{Model} & \multicolumn{3}{c}{ETTh1} & \multicolumn{3}{c}{ETTh2} & \multicolumn{3}{c}{Solar-Energy} & \multicolumn{3}{c}{Weather}\\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8} \cmidrule(lr){9-11} \cmidrule(lr){12-14}
+\multicolumn{2}{c}{Metric}
+& \omse & \idealmse & \ratio
+& \omse & \idealmse & \ratio 
+& \omse & \idealmse & \ratio 
+& \omse & \idealmse & \ratio \\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{SOFTS}}
+& Train Set 
+& 0.278 & \textbf{0.254} & 56.54\% 
+& 0.318 & \textbf{0.259} & 61.65\% 
+& 0.182 & \textbf{0.155} & 11.80\% 
+& 0.421 & \textbf{0.400} & 45.10\%\\
+\multicolumn{1}{l|}{} & Test Set 
+& 0.408 & \textbf{0.365} & 64.24\% 
+& 0.326 & \textbf{0.303} & 28.73\% 
+& 0.293 & \textbf{0.184} & 41.58\% 
+& 0.205 & \textbf{0.185} & 54.93\%\\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{iTransformer}}& Train Set 
+& 0.298 & \textbf{0.270} & 57.87\% 
+& 0.315 & \textbf{0.261} & 64.19\% 
+&0.410  & \textbf{0.281} &61.97\% 
+&0.436  & \textbf{0.389} &62.98\% \\
+\multicolumn{1}{l|}{} & Test Set 
+& 0.413 & \textbf{0.289} & 60.07\% 
+& 0.329 & \textbf{0.299} & 32.16\% 
+& 0.395 & \textbf{0.271} & 68.43\% 
+& 0.209 & \textbf{0.170} & 80.26\% \\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{PatchTST}}
+& Train Set 
+& 0.343 & \textbf{0.303} & 65.57\% 
+& 0.329 & \textbf{0.269} & 69.35\% 
+& 0.366 & \textbf{0.277} & 35.89\% 
+& 0.227 & \textbf{0.180} & 45.55\% \\
+\multicolumn{1}{l|}{} 
+& Test Set 
+& 0.424 & \textbf{0.402} & 65.51\% 
+& 0.327 & \textbf{0.298} & 42.46\% 
+& 0.374 & \textbf{0.344} & 51.66\%
+& 0.215 & \textbf{0.180} & 42.43\% \\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{TSMixer}}
+& Train Set 
+& 0.372 & \textbf{0.342} & 55.79\% 
+& 0.544 & \textbf{0.431} & 73.96\% 
+& 0.233 & \textbf{0.195} & 26.30\%
+& 0.363 & \textbf{0.348} & 37.57\% \\
+\multicolumn{1}{l|}{} & Test Set 
+& 0.402 & \textbf{0.372} & 59.19\% 
+& 0.324 & \textbf{0.289} & 42.13\% 
+& 0.288 & \textbf{0.250} & 40.12\%
+& 0.222 & \textbf{0.195} & 70.88\% \\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{TimeMixer}}
+& Train Set 
+& 0.290 & \textbf{0.262} & 57.96\% 
+& 0.309 & \textbf{0.251} & 59.36\% 
+& 0.142 & \textbf{0.112} & 13.58\%
+& 0.403 & \textbf{0.353} & 63.93\% \\
+\multicolumn{1}{l|}{} & Test Set 
+& 0.393 & \textbf{0.366} & 58.04\% 
+& 0.318 & \textbf{0.285} & 44.52\% 
+& 0.288 & \textbf{0.253} & 36.25\%
+& 0.197 & \textbf{0.172} & 66.13\% \\
+\bottomrule
+% \multicolumn{14}{l}{\textit{Note:} Ratio quantifies the percentage of training samples demonstrating prediction error reduction through Optimal Masking, calculated as $\frac{N_{\text{reduced}}}{N_{\text{total}}} \times 100\%$.}
+\end{tabular}
+}
+\end{table*}
+As demonstrated in Table \ref{tab:rq2_results}, the experimental results confirm that masked models consistently achieve lower MSE, with more than 50\% of samples exhibiting improved predictive performance (Ratio > 50\%). Notably, the phenomenon of redundancy learning shows strong architecture-agnostic characteristics. On the Weather dataset, both iTransformer (a Transformer-based model) and TSMixer (an MLP-based model) demonstrate similar relative improvements: iTransformer achieves an MSE reduction from \textbf{0.209} to \textbf{0.170} ($-18.7\%$), while TSMixer improves from \textbf{0.222} to \textbf{0.195} ($-12.2\%$). These results indicate that the effectiveness of our masking strategy is not dependent on specific model architectures.
+
+\subsection{Representation Similarity Paradox}
+\label{Paradox}
+To further investigate the redundant feature learning phenomenon, we apply t-SNE to project the SOFTS model’s high-dimensional representations of the input, embedding, prediction, and label onto a 2D plane (Fig.~\ref{fig:input_tsne}), after normalizing all features to the $[0,1]$ range.
+
+
+As illustrated in Fig.\ref{fig:input_tsne}, Normalized input ($\mathbf{Z}_{\text{in}} \in \mathbb{R}^L$) and output ($\mathbf{Z}_{\text{out}} \in \mathbb{R}^H$) embeddings show a clear contrast: inputs remain dispersed, while embeddings and preds cluster tightly despite large differences in their corresponding labels. This suggests that the model encodes redundant, task-irrelevant features that misrepresent semantic relationships and distort the input-output mapping.
+
+\begin{figure}[htbp]
+  \centering
+  % 上方单图 - 图a
+  \begin{subfigure}[b]{0.9\textwidth}
+    \centering
+    \includegraphics[width=0.9\textwidth]{fig/input_vs_output2.png}
+    \caption{\small Normalized t-SNE Projections of Input, Embedding, Prediction, and Label}
+    \label{fig:input_tsne}
+  \end{subfigure}
+
+  % 下方双图 - 图b和图c
+% 下方双图 - 图b和图c合并为一个子图（带一个标题）
+    \begin{subfigure}[b]{1.0\textwidth}
+      \centering
+      \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{fig/prediction_comparison.png}
+        \label{fig:output_tsne1}
+      \end{subfigure}
+      \hfill
+      \begin{subfigure}[b]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{fig/prediction_comparison2.png}
+        \label{fig:output_tsne2}
+      \end{subfigure}
+      \caption{\small Masked vs. Unmasked Prediction Performance}
+      \label{fig:merged_output_tsne}
+    \end{subfigure}
+  \caption[Comparative Analysis]{
+  Embedding Distributions and Masking Effects of Our Method.}
+  
+  % \small % 整体调小字号
+  %   \textbf{(a)} Visualization of input and output embeddings reduced from high-dimensional space to 2D using T-SNE, compared against label representations. All values are normalized to the $[0,1]$ range.
+
+  %   \textbf{(b)} Performance comparison between masked (red shaded region) and unmasked (full sequence) predictions using the \texttt{HULL} column from the ETTh1 dataset. \texttt{HULL} (\emph{High-Use Low Load}) represents the low load values during high electricity usage periods. The first 48 timesteps (0–47) are input features, and the subsequent 48 timesteps (48–95) compare predictions against ground truth.
+
+  %   \textbf{(c)} Using the same visualization settings as (b), but based on the \texttt{MUFL} column (\emph{Medium-Use Feature Load}) of ETTh1, which reflects different underlying load characteristics.
+  %   }
+  \label{fig:latent_space}
+\end{figure}
+
+
+\subsection{Information Bottleneck Constraints on Redundancy}
+According to the Information Bottleneck (IB) Theory~\cite{slonim1999agglomerative}, a neural network functions like a bottleneck that compresses input information during feature extraction. It discards irrelevant or noisy details and retains only the components most relevant to the overall task. For a time series forecasting model, let the input be denoted by \( X \), the latent representation by \( Z \), and the prediction target by \( Y \). The model aims to learn a representation \( Z \) that maximally preserves information relevant to \( Y \). This objective can be formally expressed as maximizing the mutual information between \( Z \) and \( Y \):
+\begin{equation}
+I(Z, Y; \boldsymbol{\theta}) = \int dx\, dy\, p(z, y \mid \boldsymbol{\theta}) \log \frac{p(z, y \mid \boldsymbol{\theta})}{p(z \mid \boldsymbol{\theta}) p(y \mid \boldsymbol{\theta})}.
+\end{equation}
+Due to inherent limitations in the data and model capacity, the amount of information that can be extracted and transmitted during training is bounded. Consequently, the representation capacity is subject to an upper information constraint \( I_c \). Based on this, the objective of the time series prediction model can be equivalently formulated as the following constrained optimization problem:
+\begin{equation}
+\max_{\boldsymbol{\theta}} I(Z, Y; \boldsymbol{\theta}) \quad \text{s.t.} \quad I(X, Z; \boldsymbol{\theta}) \leq I_c.
+\end{equation}
+This constrained optimization problem can be transformed into an unconstrained form using the method of Lagrange multipliers, leading to the maximization of the following objective\cite{alemi2019deepvariationalinformationbottleneck}:
+\begin{equation}
+R_{\mathrm{IB}}(\boldsymbol{\theta}) = I(Z; Y \, ; \boldsymbol{\theta}) - \beta I(Z; X \, ; \boldsymbol{\theta}).
+\end{equation}
+There are two implementation paths under this objective: one is to maximize the mutual information \( I(Z; Y) \) between \( Z \) and \( Y \); the other is to minimize the mutual information \( I(Z; X) \) between \( Z \) and \( X \). Most current sequential prediction models focus on improving \( I(Z; Y) \) through iterative training, but have not explicitly optimized performance by penalizing redundant features via minimizing \( I(Z; X) \). Therefore, we propose an adaptive loss function that aims to minimize the mutual information between \( X \) and \( Z \), offering a novel optimization path for improving the performance of sequential prediction models.
+
+\section{Proposed Method}
+\label{headings}
+%\vspace{-1.5em}
+\begin{figure}
+    \centering
+    \includegraphics[width=\linewidth]{fig/aml.pdf}
+    \caption{Overview of the Adaptive Masking Loss (AML) framework. The upper half illustrates how the optimal mask length \( K^* \) is selected by evaluating prediction losses over sampled masks. A weighting coefficient \( \beta \) is computed based on the gain over the unmasked loss. The lower half shows the AML loss, calculated as the sum of representation differences between the original input and the \( K^* \) masked input across embedding, backbone, and predictor layers.}
+    \label{fig:aml}
+\end{figure}
+
+\subsection{Adaptive Masking Loss (AML)}
+\label{sec:aml}
+As discussed in Section~\ref{Truncation}, applying ideal masking to input data reduces the information $I(X)$ while improving prediction accuracy. This indicates that the representation $Z_{k^*}$, generated by encoder $p_\theta$ from masked features $X_{t,k^{*}}$, contains less redundancy and better approximates the minimal sufficient statistics (i.e., with smaller $I(X,Z_{k^*};\theta)$). Based on this insight, we propose the \textbf{Adaptive Masking Loss (AML)} to explicitly reduce mutual information $I(X,Z;\theta)$ by guiding the encoder's output representation $Z$ toward $Z_{k^*}$, thereby suppressing redundant feature learning and unleashing model potential. The overall framework of AML is illustrated in Figure \ref{fig:aml}.
+\subsubsection{Implementation}
+
+The exhaustive search for optimal mask $k^*$ by enumerating all possible mask lengths $k \in \{1,...,L\}$ results in prohibitive $O(L)$ time complexity for long sequences. We therefore adopt an efficient stochastic approximation strategy:
+
+\begin{enumerate}[leftmargin=*,noitemsep]
+    \item \textbf{Random Mask Generation}: Independently sample $m$ mask indices $\{k_s\}_{s=1}^m$ from uniform distribution $d(k)=\text{Uniform}\{1,...,L\}$, each generating a masked variant:
+    \begin{equation}
+        \widetilde{X}_{t,s}^{(L)} = \mathcal{M}_{k_s}(X_t^{(L)})
+    \end{equation}
+    
+    \item \textbf{Loss Evaluation}: Compute prediction losses for both masked and original data:
+    \begin{align}
+        \ell_s &= \mathcal{L}(f_\theta(\widetilde{X}_{t,s}^{(L)}), Y_t^{(H)}) \\
+        \ell &= \mathcal{L}(f_\theta(X_t^{(L)}), Y_t^{(H)})
+    \end{align}
+    
+    \item \textbf{Optimal Representation Selection}: If $\exists \ell_s < \ell$, the corresponding representation $\widetilde{Z}_s = p_\theta(\widetilde{X}_{t,s}^{(L)})$ satisfies $I(X_t^{(L)}, \widetilde{Z}_s) < I(X_t^{(L)}, Z)$, where $Z = p_\theta(X_t^{(L)})$ is the original representation. The optimal mask variant is selected by:
+    \begin{equation}
+        s^* = \mathop{\arg\max}\limits_{s} (\ell - \ell_s)
+    \end{equation}
+\end{enumerate}
+
+\subsubsection{Loss Formulation}
+To promote compact and informative representations, AML minimizes the distance between the original representation $Z$ and the optimal masked variant $\widetilde{Z}_{s^*}$:
+\begin{equation}
+    \mathcal{L}_{\mathrm{AML}} = \beta \cdot \frac{1}{D_1 \times D_2} \| Z - \widetilde{Z}_{s^*} \|^2
+\end{equation}
+where the adaptive weight $\beta = \max (0, (\ell - \ell_{s^*}) / \ell)$ dynamically scales the optimization intensity, ensuring stronger influence from mask variants with greater loss reduction.
+
+%-------------------------------------------------
+\subsection{Embedding Similarity Penalty (ESP)}
+\label{sec:esp}
+Time series forecasting models often encounter two issues: semantic inconsistency, where semantically similar inputs lead to substantially different predictions, and representation collapse, where dissimilar inputs result in nearly identical outputs. Both problems reduce the robustness and generalization ability of the model. To address these issues, we introduce a regularization strategy that compares, for each pair of samples within a mini-batch, the geometry of the embedding space with that of the output space.
+
+\paragraph{Pairwise distances.}
+For a batch $\mathcal{B}=\{(X_i,Y_i)\}_{i=1}^{n}$ we denote by
+$Z_i\!=f_{\mathrm{enc}}(X_i)\!\in\!\mathbb{R}^{L\times D}$ the encoder output and keep the ground-truth
+$Y_i\!\in\!\mathbb{R}^{P\times D}$.
+The (normalised) squared Frobenius distances are
+\begin{equation}
+\Delta^{E}_{ij}=\frac{1}{L \times D}\,\lVert Z_i-Z_j\rVert^2_{F},
+\qquad
+\Delta^{O}_{ij}=\frac{1}{P \times D}\,\lVert Y_i-Y_j\rVert^2_{F},
+\quad 1\!\le i,j\!\le n.
+\end{equation}
+
+\paragraph{Consistency penalty.}
+Ideally $\Delta^{E}_{ij}$ and $\Delta^{O}_{ij}$ should match:  
+semantically similar inputs ($\Delta^{E}_{ij}\!\approx\!0$) ought to produce similar outputs
+($\Delta^{O}_{ij}\!\approx\!0$), and vice versa.
+Deviation is quantified element-wise through
+\begin{equation}
+P_{ij}= \operatorname{ReLU}\!\bigl(\,\Delta^{E}_{ij}-\Delta^{O}_{ij}\bigr)
+      +\operatorname{ReLU}\!\bigl(\,\Delta^{O}_{ij}-\Delta^{E}_{ij}\bigr)
+      =\lvert \,\Delta^{E}_{ij}-\Delta^{O}_{ij}\rvert_{+},
+\end{equation}
+where $\operatorname{ReLU}(x)=\max(0,x)$ and $|\cdot|_{+}$ denotes the
+non-negative part.
+The \textbf{Embedding-Similarity Penalty} then reads
+\begin{equation}
+\mathcal{L}_{\mathrm{ESP}}
+      =\frac{1}{n^{2}}\sum_{i=1}^{n}\sum_{j=1}^{n} P_{ij}.
+\label{eq:esp}
+\end{equation}
+Equation~\eqref{eq:esp} back-propagates smooth, unbiased gradients that
+jointly reshape the encoder and the predictor so that input and output
+manifolds remain geometrically aligned. 
+The detailed implementation of the Embedding Similarity Penalty (ESP) is provided as pseudocode in Appendix~\ref{sec:appendix_model_detail}.
+
+
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=\linewidth]{fig/esp.pdf}
+%     \caption{Overview of ESP}
+%     \label{fig:esp}
+% \end{figure}
+
+%-------------------------------------------------
+\subsection{Overall Training Objective}
+\label{sec:total_loss}
+Section~\ref{sec:aml} introduced the Adaptive Masking Loss $\mathcal{L}_{\mathrm{AML}}$ that discourages the learning of redundant temporal prefixes, while Section~\ref{sec:esp} proposed the Embedding-Similarity Penalty $\mathcal{L}_{\mathrm{ESP}}$ to enforce semantic–behavioural consistency. Combined with the standard prediction loss $\mathcal{L}_{\mathrm{pred}}$ (\emph{e.g.}, MSE between the forecast $\hat{Y}$ and the target $Y$), our final objective is
+\begin{equation}
+\mathcal{L}_{\text{total}}
+   \;=\;
+   \mathcal{L}_{\mathrm{pred}}
+   \;+\;
+   \lambda_{\mathrm{AML}}\,
+   \mathcal{L}_{\mathrm{AML}}
+   \;+\;
+   \lambda_{\mathrm{ESP}}\,
+   \mathcal{L}_{\mathrm{ESP}},
+\label{eq:total_loss}
+\end{equation}
+where $\lambda_{\mathrm{AML}},\lambda_{\mathrm{ESP}}\!>\!0$
+control the strength of each auxiliary term.
+Minimizing~\eqref{eq:total_loss} jointly
+(i) identifies the informative prefix for every sequence,
+(ii) preserves the intrinsic topology of the data,
+and (iii) improves predictive accuracy and interpretability
+without adding inference-time overhead.
+
+\section{Experiment}
+\subsection{Experiment Setup}
+
+\paragraph{Datasets.} We evaluate our proposed method using seven widely recognized benchmark datasets for multivariate time series forecasting: \textbf{ETTh1}, \textbf{ETTh2}, \textbf{ETTm1}, \textbf{ETTm2}, \textbf{Solar-Energy}, \textbf{Electricity}, and \textbf{Weather}. These datasets encompass a variety of application scenarios with different temporal resolutions, seasonality patterns, and dynamic structures. Detailed descriptions of each dataset, including their specific characteristics and collection periods, are provided in the appendix \ref{sec:datasetdes}.
+
+\paragraph{Task formulation.} 
+In our experimental setup, the forecasting task is formulated as a sequence-to-sequence regression problem, applicable to multivariate time series. Each model is trained to predict a future sequence \( \boldsymbol{Y}_{t}^{(H)} \in \mathbb{R}^{H \times D} \) from a fixed-length historical input sequence \( \boldsymbol{X}_{t}^{(48)} \in \mathbb{R}^{48 \times D} \), where \( H \) denotes the prediction length and \( D \) is the number of variables. We adopt multiple prediction horizons \( H \in \{48, 72, 96, 120, 144, 168, 192\} \).
+
+% \paragraph{Data preprocessing.} The datasets are divided into training, validation, and testing sets using a fixed 6:2:2 chronological split. Each variable undergoes independent normalization based on the training set's mean and standard deviation, ensuring no data leakage during the process.
+% \paragraph{Evaluation metrics.} We utilize Mean Squared Error (MSE) and Mean Absolute Error (MAE) to assess forecasting accuracy. Results are averaged over three runs with varying random seeds to ensure statistical robustness. The model checkpoint with the lowest validation loss is used for final test set evaluation.
+
+\textbf{Baselines.} Our method is compared against five diverse baseline models: \textbf{SOFTS} \citep{softs}, \textbf{iTransformer} \citep{itransformer}, \textbf{PatchTST} \citep{PatchTST}, \textbf{TSMixer} \citep{tsmixer}, and \textbf{TimeMixer} \citep{timemixer}. These baselines are implemented using their official codebases and recommended hyperparameters to ensure a fair comparison under consistent experimental conditions.
+
+
+\textbf{Implementation details.} 
+All models are implemented in PyTorch and trained on a single NVIDIA A100 80GB GPU. To ensure a fair comparison and allow both baseline models and those augmented with our proposed modules to fully exploit their capacity, we train each model for up to 100 epochs using the Adam optimizer with an initial learning rate of \(1 \times 10^{-4}\), a cosine annealing scheduler, and a batch size of 32. Early stopping is applied based on validation loss with a patience of 20 epochs. The best-performing checkpoint on the validation set is selected for final evaluation on the test set.
+
+% For forecasting models employing our proposed Adaptive Masking Loss and Embedding Similarity Penalty strategies, these loss functions can be seamlessly integrated as plug-and-play components without requiring any modifications to the original forecaster's backbone network architecture.
+
+\textbf{Hyperparameter selection.} For the AML, the input sequence prefix length is configured as $L=48$, with the mask sampling cardinality parameterized as $m=12$. We fix both $\lambda_{\mathrm{AML}}$ and $\lambda_{\mathrm{ESP}}$ to 1 for all experiments. These settings follow standard benchmark configurations commonly used in time series forecasting.
+
+
+\subsection{Forecasting Results}
+
+We present the forecasting performance of our method—Adaptive Masking Loss with Representation Consistency (AMRC)—in comparison with five representative baseline models across seven widely used time series benchmark datasets. Table~\ref{tab:aml_results} reports the Mean Squared Error (MSE) and Mean Absolute Error (MAE) for each model, both with and without the incorporation of AMRC. 
+
+\begin{table*}[htbp]
+\centering
+\caption[Performance Comparison of Time Series Forecasting Models With and Without AMRC. ]%
+{Performance Comparison of Time Series Forecasting Models With and Without AMRC. In the experimental results, we highlighted in bold the parts where the AMRC model improved by more than 0.05 in MSE and MAE metrics compared to the baseline model. The detailed hyperparameter configurations for each model can be found in Appendix~\ref{sec:detailBaseline}. Full results are listed in Appendix~\ref{sec:fullresults}  
+
+}
+\label{tab:aml_results}
+\resizebox{\textwidth}{!}{
+\begin{tabular}{cccccccccccccccc}
+\toprule
+\multicolumn{2}{c}{Model}
+& \multicolumn{2}{c}{ETTh1} 
+& \multicolumn{2}{c}{ETTh2}
+& \multicolumn{2}{c}{ETTm1} 
+& \multicolumn{2}{c}{ETTm2} 
+& \multicolumn{2}{c}{Solar-Energy} 
+& \multicolumn{2}{c}{Electricity}
+& \multicolumn{2}{c}{Weather} \\
+\cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8} \cmidrule(lr){9-10} \cmidrule(lr){11-12} \cmidrule(lr){13-14} \cmidrule(lr){15-16} 
+\multicolumn{2}{c}{Metric}
+& \mse & \mae 
+& \mse & \mae
+& \mse & \mae 
+& \mse & \mae
+& \mse & \mae 
+& \mse & \mae
+& \mse & \mae \\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{SOFTS}} & \orim
+& 0.408 & 0.414 
+& 0.326 & 0.359 
+& 0.484 & 0.434 
+& 0.210 & 0.285
+& 0.293 & 0.314
+& 0.169 & 0.255
+& 0.205 & 0.234 \\
+\multicolumn{1}{l|}{} & \ourm
+& \textbf{0.389} & \textbf{0.393}  
+& \textbf{0.311} & 0.362  
+& \textbf{0.475} & \textbf{0.423}  
+& \textbf{0.198} & \textbf{0.265}
+& 0.290 & 0.309
+& \textbf{0.162} & \textbf{0.244}
+& \textbf{0.196} & \textbf{0.220} \\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{iTransformer}} & \orim
+& 0.413 & 0.415 
+& 0.329 & 0.362 
+& 0.517 & 0.448
+& 0.213 & 0.290
+& 0.395 & 0.352
+& 0.176 & 0.260
+& 0.209 & 0.237 \\
+\multicolumn{1}{l|}{} & \ourm 
+& \textbf{0.402} & \textbf{0.399  }
+& 0.324 & \textbf{0.356} 
+& \textbf{0.502} & \textbf{0.447}  
+& 0.211 & \textbf{0.280}
+& 0.392 & \textbf{0.342}
+& \textbf{0.163} & \textbf{0.239}
+& \textbf{0.201} & \textbf{0.221} \\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{TimeMixer}} & \orim
+& 0.393 & 0.408 
+& 0.318 & 0.355 
+& 0.466 & 0.429 
+& 0.209 & 0.285
+& 0.288 & 0.317
+& 0.194 & 0.279
+& 0.197 & 0.237\\
+\multicolumn{1}{l|}{} & \ourm
+& 0.388 & \textbf{0.401}  
+& 0.316 & \textbf{0.339}  
+& \textbf{0.447} & \textbf{0.405}  
+& 0.204 & \textbf{0.269}
+& 0.284 & 0.317
+& \textbf{0.188} & 0.277
+& \textbf{0.186} & \textbf{0.228} \\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{PatchTST}} & \orim
+& 0.424 & 0.424 
+& 0.327 & 0.358 
+& 0.461 & 0.422 
+& 0.211 & 0.287
+& 0.374 & 0.382
+& 0.211 & 0.283
+& 0.215 & 0.280\\
+\multicolumn{1}{l|}{} & \ourm
+& \textbf{0.411} & \textbf{0.415}
+& \textbf{0.319} & 0.356  
+& 0.456 & \textbf{0.413}  
+& \textbf{0.196} & \textbf{0.271}
+& \textbf{0.361} & 0.376
+& 0.207 & 0.285
+& 0.210 & \textbf{0.264} \\
+\midrule
+\multicolumn{1}{l|}{\multirow{2}{*}{TSMixer}} & \orim
+& 0.402 & 0.412
+& 0.324 & 0.357
+& 0.440 & 0.413
+& 0.201 & 0.279
+& 0.288 & 0.314
+& 0.172 & 0.258
+& 0.222 & 0.288 \\
+\multicolumn{1}{l|}{} & \ourm
+& \textbf{0.386} & \textbf{0.397}  
+& 0.319 & \textbf{0.340}  
+& \textbf{0.432} & 0.412 
+& 0.196 & \textbf{0.257}
+& \textbf{0.280} & 0.313
+& 0.169 & \textbf{0.247}
+& \textbf{0.212} & \textbf{0.281} \\
+\bottomrule
+\end{tabular}
+}
+\vspace{0.5em}
+
+\end{table*}
+
+% \footnotetext{\footnotesize All models are reproduced based on their official open-source implementations: SOFTS from \url{https://github.com/Secilia-Cxy/SOFTS}; iTransformer from \url{https://github.com/thuml/iTransformer}; TimeMixer from \url{https://github.com/kwuking/TimeMixer}; PatchTST from \url{https://github.com/yuqinie98/PatchTST}; and TSMixer from \url{https://github.com/ditschuk/pytorch-tsmixer}. Hyperparameters for each model on different datasets follow the official configurations provided in their corresponding GitHub repositories. For PatchTST on the Solar-Energy dataset, we adopt the hyperparameter settings from iTransformer.}
+
+
+
+\textbf{Consistent Performance Gains.} Across all models and datasets, our method consistently yields performance improvements. For example, the MSE of the SOFTS model decreases from 0.408 to 0.389 on the ETTh1 dataset. Similar trends are observed in iTransformer, where the MSE on Electricity drops from 0.176 to 0.163. The enhancements demonstrate that AMRC effectively mitigates redundant or noisy temporal segments, thereby improving prediction stability and accuracy.
+
+\textbf{Architecture-Agnostic Effectiveness.} AMRC delivers significant performance gains not only on Transformer-based architectures such as iTransformer and PatchTST, but also on MLP-based models including TimeMixer, SOFTS, and TSMixer. For instance, on the ETTm2 dataset, the MSE of PatchTST model decreases from 0.211 to 0.196 (a reduction of approximately 7.11\%), while the MSE of SOFTS model drops from 0.210 to 0.198 (approximately 5.71\% reduction). These results demonstrate the strong architecture-agnostic generalization ability of AMRC, highlighting its broad applicability across a wide range of time series forecasting models.
+
+\textbf{Generalization on Low-Channel Datasets.} On datasets with fewer input channels (ETTh1, ETTh2, ETTm1, ETTm2), AMRC effectively enhances model performance. For instance, on ETTm1, the MSE of iTransformer decreases from 0.517 to 0.502, and that of TSMixer drops from 0.440 to 0.432.  These results demonstrate AMRC’s ability to mitigate overfitting and improve prediction accuracy in low-dimensional time series forecasting tasks.
+
+\textbf{Robustness on High-Channel Datasets.} For high-dimensional datasets such as Weather (21 channels) and Solar-Energy (137 channels) see in Appendix \ref{sec:datasetdes}, AMRC consistently improves robustness by reducing the impact of signal noise and inter-channel redundancy. On the Weather dataset, TimeMixer’s MSE decreases from 0.197 to 0.186 and MAE from 0.237 to 0.228, while iTransformer sees an MAE drop from 0.237 to 0.221. On Solar-Energy, PatchTST's MSE drops from 0.374 to 0.361, and SOFTS sees a slight MAE reduction from 0.314 to 0.309. These enhancements highlight AMRC's effectiveness in managing complexity in multivariate time series with high channel counts.
+
+\textbf{Generalizable Training Framework.} The consistent performance improvements observed across all models validate the strong scalability and integrability of AMRC. As a constraint-based optimization strategy, AMRC does not rely on any specific model architecture, making it highly generalizable. It serves as a versatile training framework for enhancing both the efficiency and accuracy of time series forecasting models.
+
+\subsection{Ablation Study}
+\label{subsec:ablation}
+\begin{table}[t]
+\centering
+\caption{Ablation Study Results on Different Model Components}
+\label{tab:ablation}
+\resizebox{0.7\columnwidth}{!}{
+\begin{tabular}{llcccccccc}
+\toprule
+\multicolumn{2}{c}{Model} & \multicolumn{2}{c}{ETTh1} & \multicolumn{2}{c}{ETTh2} & \multicolumn{2}{c}{Solar-Energy} & \multicolumn{2}{c}{Weather}\\
+\cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8} \cmidrule(lr){9-10}
+\multicolumn{2}{c}{Metric}
+& \mse & \mae & \mse & \mae & \mse & \mae & \mse & \mae \\
+\midrule
+\multicolumn{1}{l|}{\multirow{3}{*}{SOFTS}}
+& AML only & 0.401 & 0.405 & 0.322 & 0.358 & 0.297 & 0.309 & 0.192 & 0.228 \\
+\multicolumn{1}{l|}{} & ESP only & 0.393 & 0.398 & 0.318 & 0.351 & 0.295 & 0.318 & 0.208 & 0.241 \\
+\multicolumn{1}{l|}{} & AMRC& \textbf{0.389} & \textbf{0.393} & \textbf{0.311} & \textbf{0.362} & \textbf{0.290} & \textbf{0.309} & \textbf{0.196} & \textbf{0.220} \\
+\midrule
+\multicolumn{1}{l|}{\multirow{3}{*}{iTransformer}}
+& AML only & 0.410 & 0.413 & 0.328 & 0.363 & 0.398 & 0.347 & 0.205 & 0.230 \\
+\multicolumn{1}{l|}{} & ESP only & 0.407 & 0.408 & 0.326 & 0.359 & 0.402 & 0.351 & 0.210 & 0.248 \\
+\multicolumn{1}{l|}{} & AMRC & \textbf{0.402} & \textbf{0.399} & \textbf{0.324} & \textbf{0.356} & \textbf{0.392} & \textbf{0.342} & \textbf{0.201} & \textbf{0.221} \\
+\midrule
+\multicolumn{1}{l|}{\multirow{3}{*}{TimeMixer}}
+& AML only & 0.395 & 0.412 & 0.319 & 0.351 & 0.287 & 0.319 & 0.189 & 0.232 \\
+\multicolumn{1}{l|}{} & ESP only & 0.391 & 0.406 & 0.317 & 0.347 & 0.293 & 0.325 & 0.202 & 0.248 \\
+\multicolumn{1}{l|}{} & AMRC & \textbf{0.388} & \textbf{0.401} & \textbf{0.316} & \textbf{0.339} & \textbf{0.284} & \textbf{0.317} & \textbf{0.186} & \textbf{0.228} \\
+\midrule
+\multicolumn{1}{l|}{\multirow{3}{*}{PatchTST}} 
+& AML only & 0.419 & 0.420 & 0.325 & 0.361 & 0.369 & 0.379 & 0.214 & 0.274 \\
+\multicolumn{1}{l|}{} & ESP only & 0.417 & 0.418 & 0.323 & 0.357 & 0.375 & 0.384 & 0.217 & 0.281 \\
+\multicolumn{1}{l|}{} & AMRC & \textbf{0.411} & \textbf{0.415} & \textbf{0.319} & \textbf{0.356} & \textbf{0.361} & \textbf{0.376} & \textbf{0.210} & \textbf{0.264} \\
+\midrule
+\multicolumn{1}{l|}{\multirow{3}{*}{TSMixer}} 
+& AML only & 0.396 & 0.404 & 0.324 & 0.356 & 0.285 & 0.317 & 0.216 & 0.283 \\
+\multicolumn{1}{l|}{} & ESP only & 0.390 & 0.399 & 0.322 & 0.352 & 0.291 & 0.323 & 0.224 & 0.292 \\
+\multicolumn{1}{l|}{} & AMRC & \textbf{0.386} & \textbf{0.397} & \textbf{0.319} & \textbf{0.340} & \textbf{0.280} & \textbf{0.313} & \textbf{0.212} & \textbf{0.281} \\
+\bottomrule
+\vspace{-3em}
+\end{tabular}
+}
+\end{table}
+
+\paragraph{Setup.} 
+We evaluate ablation variants on four diverse datasets: ETTh1 and ETTh2, representing hourly electricity load with varying degrees of seasonality; Solar-Energy, which exhibits weather-driven variability and periodicity; and Weather, a multivariate meteorological dataset with complex inter-variable dependencies. We adopt a fixed input horizon following standard benchmarks.
+
+\paragraph{Evaluation protocol.} 
+For each dataset, we apply the ablation study to five baseline models SOFTS, iTransformer, TimeMixer, PatchTST, and TSMixer under four configurations:1) baseline + AML, 2) baseline + ESP, and 3) baseline + both AML and ESP. This design allows us to assess the standalone effectiveness of each module as well as their combined synergy.
+
+\paragraph{Findings.}
+We evaluate the individual and joint effects of the AML and ESP components using five representative forecasting architectures across four datasets. As shown in Table~\ref{tab:ablation}, both components contribute measurable performance gains in isolation, while their combination AMRC consistently leads to the best forecasting accuracy in terms of MSE and MAE. AML provides stronger improvements across most settings, supporting its role in suppressing redundant prefixes during training. ESP, while often delivering smaller standalone gains, remains beneficial by promoting geometric alignment between embedding and output spaces. Together, these findings demonstrate that each component addresses a distinct source of generalization error.
+
+
+\paragraph{Component impact across architectures.}
+The benefits of AML and ESP are consistently observed across all backbone models, regardless of architectural differences. For instance, models with strong expressiveness, such as iTransformer and TimeMixer, benefit significantly from AML, achieving notable MSE reductions on datasets like Weather and ETTh2. Even architectures without attention mechanisms, such as SOFTS and TSMixer, exhibit consistent gains, highlighting the broad applicability of adaptive prefix masking. In contrast, the improvements from ESP are often more dataset-dependent, being particularly effective on high-dimensional multivariate inputs where representation alignment plays a critical role. For example, ESP yields non-trivial reductions in MAE on Weather, where multiple variables evolve under shared dynamics. Notably, we observe relatively smaller improvements on the Solar-Energy dataset for transformer-based models such as PatchTST and iTransformer, which may be attributed to their reliance on longer input sequences for stable attention computation.
+
+\paragraph{Complementarity and synergy.}
+The AMRC configuration, which jointly applies AML and ESP, consistently outperforms its ablated variants across all benchmarks. The performance improvement from combining both components generally exceeds the stronger of the two individual effects, indicating synergistic interaction. This complementarity can be attributed to their distinct operational scopes: AML operates on the input level by learning to suppress non-informative temporal segments, while ESP regularizes the latent space to align representations across semantically related inputs. As a result, AMRC improves both the quality of features learned from the data and the consistency of their usage in prediction. The robust gains observed across datasets and architectures suggest that jointly addressing input redundancy and representation inconsistency is critical for improving generalization in time series forecasting.
+\vspace{-1em}
+\begin{table}[htbp]
+\centering
+\caption{AMRC Effectiveness Across Datasets and Models. Ratio is the percentage of training samples with reduced MSE under prefix masking. Ratio* is the same metric after training with AMRC, reflecting improved robustness. Results are from the ablation setting with input length set to 48. Detailed results are provided in Appendix~\ref{sec:fullresults}.}
+\label{tab:amrc_ratio}
+\resizebox{0.7\columnwidth}{!}{
+\begin{tabular}{llcccccccc}
+\toprule
+\multicolumn{2}{c}{Model} & \multicolumn{2}{c}{ETTh1} & \multicolumn{2}{c}{ETTh2} & \multicolumn{2}{c}{Solar-Energy} & \multicolumn{2}{c}{Weather}\\
+\cmidrule(lr){3-4} \cmidrule(lr){5-6} \cmidrule(lr){7-8} \cmidrule(lr){9-10}
+\multicolumn{2}{c}{Metric}
+& \ratio & \ratio* & \ratio & \ratio* & \ratio & \ratio* & \ratio & \ratio* \\
+\midrule
+\multicolumn{2}{l}{\multirow{1}{*}{SOFTS}}
+& 64\% & \textbf{57.33\%} & 28.72\% & \textbf{20.28\%} & 41.58\% & \textbf{33.49\%} & 54.93\% & \textbf{47.12\%} \\
+\midrule
+\multicolumn{2}{l}{\multirow{1}{*}{iTransformer}}
+& 60.07\% & \textbf{49.95\%} & 32.16\% & \textbf{23.28\%} & 68.43\% & \textbf{63.21\%} & 80.26\% & \textbf{70.29\%} \\
+\midrule
+\multicolumn{2}{l}{\multirow{1}{*}{TimeMixer}}
+& 58.04\% & \textbf{46.29\%} & 44.52\% & \textbf{34.17\%} & 36.25\% & \textbf{27.90\%} & 66.13\% & \textbf{52.28\%} \\
+\midrule
+\multicolumn{2}{l}{\multirow{1}{*}{PatchTST}}
+& 65.51\% & \textbf{51.63\%} & 42.46\% & \textbf{26.19\%} & 51.66\% & \textbf{47.64\%} & 42.43\% & \textbf{30.78\%} \\
+\midrule
+\multicolumn{2}{l}{\multirow{1}{*}{TSMixer}}
+& 59.19\% & \textbf{46.62\%} & 42.13\% & \textbf{27.98\%} & 40.12\% & \textbf{28.36\%} & 70.88\% & \textbf{58.23\%} \\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+\paragraph{Effectiveness of AMRC in Reducing Redundant Features} 
+We evaluate the model’s robustness to redundant input by computing the proportion of training samples with improved MSE under prefix masking Ratio and compare it to the value after applying AMRC Ratio*. As shown in Table~\ref{tab:amrc_ratio}, AMRC consistently improves or maintains this ratio, indicating its effectiveness in suppressing the impact of redundant temporal information. 
+
+\section{Conclusion}
+This study pioneers the investigation into the negative effects of redundant feature learning in time series forecasting and introduces AMRC, a plug-and-play solution that suppresses such learning without requiring architectural modifications. Unlike prior work focused on enhancing predictive features, AMRC improves accuracy by reducing reliance on redundant features while maintaining model flexibility. Its key advantages include: 1) seamless integration with existing models, 2) effective suppression of feature redundancy, and 3) strong generalization performance across benchmark tests. By addressing the long-overlooked issue of redundant learning, this research provides a novel and practical methodology for optimizing forecasting models.
+
+% \section*{Acknowledgments} 
+% This research was supported by National Science and Technology Major Project (2022ZD0114805), NSFC (61773198, 62376118,61921006), Collaborative Innovation Center of Novel Software Technology and Industrialization, CCF-Tencent Rhino-Bird Open Research Fund (RAGR20240101).
+
+\medskip
+\bibliographystyle{plainnat}
+\bibliography{neurips_2025}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\appendix
+\section{Related Work}
+
+The Information Bottleneck (IB) method was first introduced by Tishby et al. \cite{tishby2000informationbottleneckmethod} as an information-theoretic framework that aims to compress input signals while preserving as much relevant information as possible about the target output. In the field of machine learning, IB theory has been widely adopted as a regularization technique. For instance, Alemi et al.\cite{alemi2019deepvariationalinformationbottleneck} proposed the Variational Information Bottleneck (VIB), which leverages variational inference to construct a tractable lower bound on the IB objective. Building upon this, Tishby and Zaslavsky\cite{deep_learning_information_bottleneck}further explored the applicability of information-theoretic objectives to deep neural networks. Research on IB has also extended into the domain of clustering. Slonim et al.\cite{slonim1999agglomerative} developed a distributional clustering algorithm based on mutual information maximization and demonstrated its effectiveness on the 20 Newsgroups dataset, achieving substantial compression with minimal loss of relevant information. More recently, Hu et al.\cite{hu2024survey} conducted a comprehensive survey of the IB literature, reviewing over two decades of theoretical developments, methodological advances, and practical applications in both traditional machine learning and deep learning settings, aiming to provide a unified perspective for future research in this area.
+
+Time series forecasting has attracted significant attention due to its wide-ranging applications in fields such as energy, transportation, and economics. In the context of deep learning, time series forecasting methods can be broadly categorized into MLP-based, RNN-based, and Transformer-based approaches. Among MLP-based models, DLinear\cite{DLinear} and TSMixer\cite{tsmixer} are representative examples, featuring relatively simple architectures while achieving strong performance across multiple datasets. RNN-based methods, such as Segrnn\cite{tactis} and LSTMlong\cite{lstmlong}, focus on structural modifications to address challenges related to parallel prediction and long-sequence modeling. Transformer-based models include Informer\cite{informer}, Autoformer\cite{autotransformer}, and iTransformer\cite{itransformer}. Informer introduces a sparse attention mechanism to improve the scalability of traditional attention for time series modeling; Autoformer incorporates frequency-domain information to enhance attention; and iTransformer further extends attention across channels by embedding multivariate sequences for variable-aware representation.
+
+\label{gen_inst}
+
+\section{Limitations}
+Despite the demonstrated effectiveness (Table \ref{tab:aml_results}) of our Adaptive Masking Loss with Representation Consistency (AMRC) in suppressing redundant feature learning, several limitations remain and warrant further investigation and refinement in future work.
+
+\begin{enumerate}
+    \item \textbf{High Computational Overhead} \\
+    In AMRC, the Adaptive Masking Loss (AML) requires the generation of $m$ masked variants per training batch, each undergoing a forward pass to select the optimal representation. This mechanism results in a per-step training cost approximately $m$ times higher than standard training. In particular, as the input sequence length $L$ increases, a larger $m$ is typically needed to ensure effective mask selection, which further exacerbates the computational burden. While this overhead is acceptable in offline training scenarios, it may become a bottleneck in latency-sensitive applications such as high-frequency trading or real-time fault detection.
+    
+    \item \textbf{Distance Degeneration in High-Dimensional Spaces} \\
+    The Embedding Similarity Penalty (ESP) relies on normalized Frobenius distances ($\Delta E$ and $\Delta O$) to quantify geometric discrepancies between embedding and output spaces. However, in high-dimensional embedding spaces (e.g., when $D > 64$), euclidean distances tend to concentrate, causing inter-sample distances to shrink and resulting in $P_{ij} \approx 0$, which weakens the regularization signal. This effect is especially pronounced when the output length $P$ is large. Moreover, as shown in Table\ref{tab:ablation}, the benefit of ESP is highly dataset-dependent: significant performance gains are observed in datasets with strong multivariate interactions (e.g., \textit{Weather}), while improvements are more limited in datasets with simpler structure or weaker inter-variable coupling. This suggests that the effectiveness of ESP may be constrained by the complexity of the task-specific data distribution.
+    
+    \item \textbf{Residual Redundant Features} \\
+    Although AMRC effectively reduces the influence of redundant features through AML and ESP, it does not eliminate them entirely. This limitation mainly arises from the approximation nature of AML: the optimal mask $k^*$ is selected from a finite set of $m$ randomly sampled variants, introducing the possibility of missing the true theoretical optimum. Nonetheless, this strategy strikes a practical balance between computational efficiency and redundancy suppression. Future work may explore dynamic sampling strategies or learning-based mask generation mechanisms to better approximate the optimal mask and further enhance redundancy elimination.
+\end{enumerate}
+
+
+\section{Details of the Baseline Model}
+\label{sec:detailBaseline}
+ All models are reproduced based on their official open-source implementations: 
+ \begin{enumerate}
+    \item  \textbf{SOFTS} from \url{https://github.com/Secilia-Cxy/SOFTS}.
+    \item \textbf{TimeMixer} from \url{https://github.com/kwuking/TimeMixer}.
+    \item \textbf{iTransformer} from \url{https://github.com/thuml/iTransformer}.
+    \item \textbf{PatchTST} from \url{https://github.com/yuqinie98/PatchTST}.
+    \item \textbf{TSMixer} from \url{https://github.com/ditschuk/pytorch-tsmixer}.
+\end{enumerate}
+The hyperparameters for each model on different datasets follow the official configurations provided in their corresponding GitHub repositories. For the PatchTST model on the Solar-Energy dataset, since no official configuration was provided, we adopted the hyperparameter settings from iTransformer.
+
+
+\section{Model Detail}
+\label{sec:appendix_model_detail}
+
+\subsection{ESP}
+\begin{algorithm}[H]
+\caption{Embedding-Similarity Penalty (ESP) for Time Series Forecasting}
+\label{alg:esp}
+\KwIn{Mini–batch $\mathcal{B}=\{(X_i,Y_i)\}_{i=1}^{n}$, encoder $f_{\mathrm{enc}}$, predictor $f_{\mathrm{pred}}$}
+\KwOut{Penalty loss $\mathcal{L}_{\mathrm{ESP}}$}
+
+\SetKwComment{tcp}{\#}{}
+\SetAlgoNoLine
+\DontPrintSemicolon
+
+\textbf{1. Forward pass to compute encoder outputs} \\
+\For{$i \leftarrow 1$ \KwTo $n$}{
+    $Z_i \gets f_{\mathrm{enc}}(X_i)$ \tcp*{encoder output $\in \mathbb{R}^{L \times D}$} 
+}
+
+\textbf{2. Compute pairwise Frobenius distances} \\
+Initialize $\Delta^{E}, \Delta^{O} \in \mathbb{R}^{n \times n}$\\
+\For{$i \leftarrow 1$ \KwTo $n$}{
+    \For{$j \leftarrow i$ \KwTo $n$}{
+        $\Delta^{E}_{ij} \gets \frac{1}{L \times D} \|Z_i - Z_j\|_F^2$ \tcp*{embedding similarity}
+        $\Delta^{O}_{ij} \gets \frac{1}{P \times D} \|Y_i - Y_j\|_F^2$ \tcp*{output similarity}
+        $\Delta^{E}_{ji} \gets \Delta^{E}_{ij}$,\; $\Delta^{O}_{ji} \gets \Delta^{O}_{ij}$ \tcp*{symmetry}
+    }
+}
+
+\textbf{3. Compute pairwise penalties} \\
+\For{$i \leftarrow 1$ \KwTo $n$}{
+    \For{$j \leftarrow 1$ \KwTo $n$}{
+        $P_{ij} \gets |\Delta^{E}_{ij} - \Delta^{O}_{ij}|_+$ \tcp*{element-wise consistency penalty}
+    }
+}
+
+\textbf{4. Compute final regularization loss} \\
+$\mathcal{L}_{\mathrm{ESP}} \gets \frac{1}{n^2} \sum_{i=1}^{n} \sum_{j=1}^{n} P_{ij}$
+
+\textbf{5. Backward pass and update} \\
+Update $\theta$ using forecasting loss $+ \lambda_{\mathrm{ESP}} \cdot \mathcal{L}_{\mathrm{ESP}}$
+
+\end{algorithm}
+
+\section{Full Results}
+\subsection{Experimental Result Details}
+\label{sec:fullresults}
+\begin{table}[htbp]
+  \caption{Multivariate forecasting results with prediction lengths $H\in\{48, 72, 96, 120, 144, 168, 192\}$  and fixed input window length $L=48$. Red highlights indicate performance improvements $>$ 0.05 using our method, while blue highlights denote improvements $>$ 0 but $\le$ 0.05.}
+  % \renewcommand{\arraystretch}{1} 
+  \centering
+  \resizebox{1\columnwidth}{!}{
+  % \begin{threeparttable}
+  % \begin{small}
+  % \renewcommand{\multirowsetup}{\centering}
+  % \setlength{\tabcolsep}{1.45pt}
+  \label{tab:main_result_all}
+  % \scalebox{0.4}{
+  \begin{tabular}{c|c|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc|cc}
+    \toprule
+    \multicolumn{2}{c}{Models} & 
+    \multicolumn{4}{c}{SOFTS}   &
+    \multicolumn{4}{c}{TimeMixer} & 
+    \multicolumn{4}{c}{iTransformer} & 
+    \multicolumn{4}{c}{PatchTST} &
+    \multicolumn{4}{c}{TSMixer} \\
+    \cmidrule(lr){3-6} \cmidrule(lr){7-10}\cmidrule(lr){11-14} \cmidrule(lr){15-18}\cmidrule(lr){19-22}
+    \multicolumn{2}{c}{} & \multicolumn{2}{c}{original} & \multicolumn{2}{c}{AMRC} & \multicolumn{2}{c}{original} & \multicolumn{2}{c}{AMRC} & \multicolumn{2}{c}{original} & \multicolumn{2}{c}{AMRC} & \multicolumn{2}{c}{original} & \multicolumn{2}{c}{AMRC} & \multicolumn{2}{c}{original} & \multicolumn{2}{c}{AMRC} \\
+    \cmidrule(lr){3-4} \cmidrule(lr){5-6}\cmidrule(lr){7-8} \cmidrule(lr){9-10}\cmidrule(lr){11-12} \cmidrule(lr){13-14} \cmidrule(lr){15-16}\cmidrule(lr){17-18} \cmidrule(lr){19-20}\cmidrule(lr){21-22}
+    \multicolumn{2}{c}{Metric} & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE & MSE & MAE \\
+    \midrule\multirow{8}{*}{\rotatebox{90}{ETTh1}}
+    & 48     
+    &0.354 	&0.381	&\boldres{0.334}	&\boldres{0.359}	
+    &0.333	&0.372  &\boldres{0.324}  &\boldres{0.365} 
+    &0.353	&0.381	&\boldres{0.344}	&\boldres{0.365}
+    &0.373	&0.394	&\boldres{0.363}	&\boldres{0.388}
+    &0.345	&0.375	&\boldres{0.331}	&\boldres{0.361}	\\ 
+    & 72    
+    & 0.379 & 0.397 & \boldres{0.364} & \boldres{0.380}
+    & 0.361 & 0.389 & \secondres{0.356} & \secondres{0.384}
+    & 0.381 & 0.396 & \boldres{0.367} & \boldres{0.377}
+    & 0.387 & 0.406 & \boldres{0.375} & \secondres{0.396}
+    & 0.376 & 0.395 & \boldres{0.363} & \secondres{0.382} \\
+    & 96    
+    & 0.394 & 0.407 & \boldres{0.377} & \boldres{0.388}	
+    & 0.376 & 0.399 & \secondres{0.372} & \secondres{0.394}	
+    & 0.401 & 0.408 & \boldres{0.393} &\boldres{0.387}	
+    & 0.411 & 0.417 & \boldres{0.397} & \boldres{0.405}	
+    & 0.389 & 0.405 & \boldres{0.376} & \boldres{0.393} \\
+    & 120   
+    & 0.418 & 0.421 & \boldres{0.400} & \boldres{0.401}	
+    & 0.398 & 0.410 & \secondres{0.397} & \boldres{0.404}	
+    & 0.419 & 0.419 & \boldres{0.410} & \boldres{0.403}	
+    & 0.428 & 0.426 & \boldres{0.415} & \boldres{0.418}	
+    & 0.406 & 0.415 & \boldres{0.386} & \boldres{0.401} \\
+    & 144    
+    & 0.426 & 0.425 & \boldres{0.404} & \boldres{0.402}
+    & 0.416 & 0.421 & \secondres{0.412} & \boldres{0.413}
+    & 0.434 & 0.427 & \boldres{0.420} & \boldres{0.409}
+    & 0.443 & 0.434 & \boldres{0.432} & \boldres{0.424}
+    & 0.419 & 0.422 & \boldres{0.406} & \boldres{0.405} \\
+    & 168    
+    & 0.438 & 0.434 & \boldres{0.416} & \boldres{0.409}
+    & 0.426 & 0.427 & \boldres{0.420} & \boldres{0.417}
+    & 0.443 & 0.434 & \boldres{0.431} & \boldres{0.421}
+    & 0.456 & 0.441 & \boldres{0.441} & \boldres{0.429}
+    & 0.433 & 0.431 & \boldres{0.412} & \boldres{0.416} \\ 
+    & 192    
+    & 0.450 & 0.435 & \boldres{0.427} & \boldres{0.410}
+    & 0.439 & 0.435 & \secondres{0.435} & \secondres{0.430}
+    & 0.458 & 0.443 & \boldres{0.449} & \boldres{0.431}
+    & 0.468 & 0.448 & \boldres{0.455} & \secondres{0.444}
+    & 0.446 & 0.440 & \boldres{0.427} & \boldres{0.421} \\
+    \cmidrule(lr){2-22}  & Avg    
+    &0.408	&0.414	&\boldres{0.389}  &\boldres{0.393}	
+    &0.393	&0.408  &\secondres{0.388}  &\boldres{0.401}
+    &0.413	&0.415	&\boldres{0.402}	&\boldres{0.399}	
+    &0.424	&0.424	&\boldres{0.411}	&\boldres{0.415}
+    &0.402	&0.412	&\boldres{0.386}	&\boldres{0.397}	\\ 
+    \midrule\multirow{8}{*}{\rotatebox{90}{ETTh2}}
+    & 48     
+    & 0.236 & 0.304 & \boldres{0.221} & \secondres{0.303}	
+    & 0.235 & 0.302 & \secondres{0.230} & \boldres{0.290}
+    & 0.246 & 0.312 & \boldres{0.237} & \boldres{0.306}
+    & 0.241 & 0.306 & \boldres{0.229} & \secondres{0.301}
+    & 0.241 & 0.302 & \boldres{0.229} & \boldres{0.277} \\ 
+    & 72    
+    & 0.281 & 0.333 & \boldres{0.275} & 0.344
+    & 0.273 & 0.326 & \secondres{0.269} & \boldres{0.309}
+    & 0.283 & 0.336 & \secondres{0.280} & \boldres{0.327}
+    & 0.281 & 0.332 & \boldres{0.274} & \secondres{0.328}
+    & 0.276 & 0.328 & \boldres{0.270} & \boldres{0.299} \\ 
+    & 96    
+    & 0.319 & 0.356 & \boldres{0.307} & 0.364	
+    & 0.298 & 0.343 & \secondres{0.294} & \boldres{0.328}
+    & 0.309 & 0.352 & \secondres{0.306} & \boldres{0.345}
+    & 0.307 & 0.349 & \boldres{0.299} & 0.349
+    & 0.303 & 0.345 & \secondres{0.298} & \boldres{0.314} \\
+   & 120    
+    & 0.328 & 0.361 & \boldres{0.315} & 0.368	
+    & 0.323 & 0.359 & \secondres{0.321} & \boldres{0.342}
+    & 0.332 & 0.366 & \secondres{0.329} & \boldres{0.359}
+    & 0.331 & 0.361 & \secondres{0.326} & \secondres{0.357}
+    & 0.331 & 0.361 & \boldres{0.324} & \boldres{0.332} \\ 
+    & 144    
+    & 0.354 & 0.375 & \boldres{0.333} & \secondres{0.371}
+    & 0.343 & 0.371 & 0.343 & \boldres{0.352}
+    & 0.354 & 0.377 & \boldres{0.346} & \boldres{0.368}
+    & 0.353 & 0.374 & \boldres{0.347} & \secondres{0.372}
+    & 0.353 & 0.373 & \secondres{0.352} & \boldres{0.338} \\
+    & 168    
+    & 0.371 & 0.386 & \boldres{0.354} & \secondres{0.385}	
+    & 0.368 & 0.388 & 0.369 & \boldres{0.370}
+    & 0.379 & 0.391 & \secondres{0.376} & 0.392
+    & 0.376 & 0.387 & \boldres{0.367} & 0.390
+    & 0.370 & 0.485 & \secondres{0.369} & \boldres{0.449} \\
+    & 192    
+    & 0.391 & 0.399 & \boldres{0.373} & 0.399	
+    & 0.386 & 0.399 & 0.387 & \boldres{0.381}
+    & 0.398 & 0.402 & \secondres{0.393} & \boldres{0.395}
+    & 0.397 & 0.399 & \boldres{0.391} & \secondres{0.396}
+    & 0.396 & 0.402 & \boldres{0.390} & \boldres{0.369} \\
+    \cmidrule(lr){2-22}  & Avg    
+    &0.326	&0.359	&\boldres{0.311}	&0.362
+    &0.318	&0.355  &\secondres{0.316}  &\boldres{0.339} 
+    &0.329	&0.362	&\secondres{0.324}	&\boldres{0.356}
+    &0.327	&0.358	&\boldres{0.319}	&\secondres{0.356}	
+    &0.324	&0.357	&\secondres{0.319}	&\boldres{0.340}	\\ 
+    \midrule\multirow{8}{*}{\rotatebox{90}{ETTm1}}
+   & 48     
+    &0.497 	&0.434	&\boldres{0.487}	&\boldres{0.422}	
+    &0.462	&0.423  &\boldres{0.443}  &\boldres{0.397}
+    &0.543	&0.453	&\boldres{0.529}	&\secondres{0.448}
+    &0.481	&0.424	&\boldres{0.472}	&\boldres{0.417}	
+    &0.452	&0.411	&\boldres{0.442}	&\boldres{0.404}	\\ 
+    & 72    
+    &0.462	&0.421	&\secondres{0.457}	&\boldres{0.414}	
+&0.453	&0.420  	&\boldres{0.438}  	&\boldres{0.394}
+&0.497	&0.438	&\boldres{0.479}	&0.438	
+&0.443	&0.411	&\secondres{0.438}	&\boldres{0.400}	
+&0.419	&0.399	&\boldres{0.406}	&0.399	\\ 
+    & 96    
+    &0.447	&0.418	&\boldres{0.440}	&\boldres{0.409}	
+&0.437	&0.415  	&\boldres{0.418}  	&\boldres{0.392}	
+&0.475	&0.431	&\boldres{0.461}	&\secondres{0.429}
+&0.422	&0.402	&\secondres{0.417}	&\secondres{0.389}	
+&0.404	&0.395	&\boldres{0.398}	&\secondres{0.394}	\\ 
+    & 120    
+    &0.478	&0.432  &\boldres{0.470}  &\boldres{0.422}	
+&0.473	&0.432	&\boldres{0.452}  &\boldres{0.407} 
+&0.512	&0.447	&\boldres{0.499}	&\secondres{0.449}
+&0.459	&0.420	&\secondres{0.455}	&\boldres{0.413}	
+&0.438	&0.413	&\boldres{0.431}	&\secondres{0.412}	\\
+    & 144    
+    &0.507  &0.448	&\boldres{0.495}	&\boldres{0.434}
+&0.489  &0.441	&\boldres{0.469}  &\boldres{0.419} 
+&0.542	&0.461	&\boldres{0.525}	&\boldres{0.455}	
+&0.481	&0.434	&\secondres{0.476}	&\secondres{0.426}	
+&0.460	&0.425	&\boldres{0.451}	&\secondres{0.424}	\\ 
+    & 168    
+    &0.498	&0.443  &\boldres{0.486}  &\boldres{0.429}	
+    &0.479	&0.437	&\boldres{0.461}  &\boldres{0.416}
+    &0.531	&0.457	&\boldres{0.517}	&0.458	
+    &0.477	&0.433	&\secondres{0.474}	&\secondres{0.429}	
+    &0.457	&0.426	&\secondres{0.452}	&0.430	\\ 
+    & 192    
+    &0.501  &0.445	&\boldres{0.488}	&\boldres{0.430}
+    &0.470	&0.435	&\boldres{0.447}  &\boldres{0.409}
+    &0.521	&0.452	&\boldres{0.504}	&0.453	
+    &0.465	&0.427	&\boldres{0.459}	&\boldres{0.418}
+    &0.451	&0.422	&\boldres{0.444}	&\secondres{0.421}	\\ 
+    \cmidrule(lr){2-22}  & Avg    
+    &0.484	&0.434	&\boldres{0.475}	&\boldres{0.423}	
+    &0.466	&0.429  &\boldres{0.447}  &\boldres{0.405} 
+    &0.517	&0.448	&\boldres{0.502}	&\secondres{0.447}	
+    &0.461	&0.422	&\secondres{0.456}	&\boldres{0.413}	
+    &0.440	&0.413	&\boldres{0.432}	&\secondres{0.412}	\\ 
+     \midrule\multirow{8}{*}{\rotatebox{90}{ETTm2}}
+    & 48
+    &0.154 	&0.246	&\boldres{0.141}	&\boldres{0.226}	
+    &0.157	&0.251  &\boldres{0.150}  &\boldres{0.235}
+    &0.159	&0.255	&\secondres{0.158}	&\boldres{0.242}	
+    &0.160	&0.253	&\boldres{0.151}	&\boldres{0.241}	
+    &0.147	&0.238	&\boldres{0.141}	&\boldres{0.218}	\\ 
+    & 72    
+    &0.174	&0.261	&\boldres{0.166}	&\boldres{0.246}
+    &0.173	&0.261  &\boldres{0.164}  &\boldres{0.249}
+    &0.178	&0.268	&0.178	&\boldres{0.261}
+    &0.176	&0.265	&\boldres{0.159}	&\boldres{0.253}
+    &0.170	&0.257	&\boldres{0.158}	&\boldres{0.233}	\\ 
+    & 96    
+    &0.189	&0.271	&\boldres{0.179}	&\boldres{0.254}
+    &0.190	&0.274  &\secondres{0.186}  &\boldres{0.256}	
+    &0.193	&0.276	&\secondres{0.188}	&\boldres{0.268}
+    &0.190	&0.272	&\boldres{0.176}	&\boldres{0.253}
+    &0.186	&0.265	&\boldres{0.177}	&\boldres{0.247}	\\ 
+    & 120    
+    &0.211	&0.287  &\boldres{0.200}  &\boldres{0.269}	
+    &0.210	&0.285	&\secondres{0.209}  &\boldres{0.268} 
+    &0.214	&0.290	&\secondres{0.210}	&\boldres{0.280}
+    &0.212	&0.287	&\boldres{0.194}	&\boldres{0.273}	
+    &0.208	&0.282	&\boldres{0.198}	&\boldres{0.261}	\\ 
+    & 144    
+    &0.236  &0.302	&\boldres{0.221}	&\boldres{0.280}
+    &0.231  &0.300	&\secondres{0.226}  &\boldres{0.283}
+    &0.236	&0.304	&\secondres{0.235}	&\boldres{0.296}
+    &0.233	&0.302	&\boldres{0.220}	&\boldres{0.286}	
+    &0.228	&0.296	&\boldres{0.219}	&\boldres{0.272}	\\ 
+    & 168    
+    &0.248	&0.311  &\boldres{0.233}  &\boldres{0.289}	
+    &0.245	&0.311	&\secondres{0.242}  &\boldres{0.295} 
+    &0.251	&0.313	&0.251	&\boldres{0.301}
+    &0.248	&0.310	&\boldres{0.232}	&\boldres{0.291}
+    &0.244	&0.305	&\boldres{0.235}	&\boldres{0.279}	\\ 
+    & 192    
+    &0.261  &0.316	&\boldres{0.245}	&\boldres{0.293}	
+    &0.255	&0.313	&\secondres{0.250}  &\boldres{0.295}
+    &0.263	&0.321	&\boldres{0.257}	&\boldres{0.312}
+    &0.260	&0.317	&\boldres{0.240}	&\boldres{0.300}	
+    &0.257	&0.313	&\boldres{0.243}	&\boldres{0.290}	\\ 
+    \cmidrule(lr){2-22}  & Avg    
+    &0.210 	&0.285 	&\boldres{0.198}	&\boldres{0.265}	
+    &0.209	&0.285  &\secondres{0.204}  &\boldres{0.269}
+    &0.213	&0.290	&\secondres{0.211}	&\boldres{0.280}	
+    &0.211	&0.287	&\boldres{0.196}	&\boldres{0.271}	
+    &0.201	&0.279	&\secondres{0.196}	&\boldres{0.257}	\\ 
+    \midrule\multirow{8}{*}{\rotatebox{90}{Solar-Energy}}
+   & 48     
+    & 0.256 & 0.294 & \secondres{0.253} & \secondres{0.289}
+    & 0.264 & 0.296 & \secondres{0.259} & \secondres{0.292}
+    & 0.357 & 0.344 & \secondres{0.354} & \boldres{0.337}
+    & 0.362 & 0.386 & \boldres{0.347} & \boldres{0.378}
+    & 0.248 & 0.283 & \boldres{0.240} & \secondres{0.282} \\
+    & 72    
+    & 0.311 & 0.333 & 0.313 & 0.333
+    & 0.293 & 0.341 & \secondres{0.292} & 0.342
+    & 0.441 & 0.381 & 0.442 & \boldres{0.373}
+    & 0.429 & 0.430 & \boldres{0.418} & \secondres{0.425}
+    & 0.305 & 0.327 & \boldres{0.298} & 0.328 \\
+    & 96    
+    & 0.308 & 0.324 & 0.308 & \secondres{0.322}
+    & 0.309 & 0.343 & \secondres{0.304} & \secondres{0.342}
+    & 0.446 & 0.374 & \secondres{0.443} & \boldres{0.363}
+    & 0.409 & 0.417 & \boldres{0.392} & \boldres{0.409}
+    & 0.308 & 0.334 & \boldres{0.301} & 0.346 \\
+    & 120    
+    & 0.283 & 0.302 & \secondres{0.282} & \secondres{0.299}
+    & 0.288 & 0.307 & \secondres{0.283} & 0.311
+    & 0.385 & 0.345 & \secondres{0.382} & \boldres{0.330}
+    & 0.364 & 0.376 & \boldres{0.353} & \boldres{0.369}
+    & 0.290 & 0.315 & \boldres{0.283} & \boldres{0.309} \\ 
+    & 144    
+    & 0.296 & 0.316 & \secondres{0.291} & \boldres{0.309}
+    & 0.288 & 0.305 & \secondres{0.284} & 0.305
+    & 0.369 & 0.331 & \secondres{0.366} & \boldres{0.322}
+    & 0.344 & 0.355 & \boldres{0.331} & \secondres{0.351}
+    & 0.280 & 0.304 & \secondres{0.275} & \secondres{0.301} \\
+   & 168    
+    & 0.293 & 0.311 & \secondres{0.288} & \boldres{0.304}
+    & 0.279 & 0.307 & \boldres{0.273} & 0.309
+    & 0.373 & 0.337 & \boldres{0.367} & \boldres{0.326}
+    & 0.339 & 0.356 & \boldres{0.326} & \boldres{0.347}
+    & 0.286 & 0.312 & \boldres{0.274} & \boldres{0.306} \\
+    & 192    
+    & 0.304 & 0.316 & \boldres{0.298} & \boldres{0.308}
+    & 0.296 & 0.317 & \secondres{0.293} & 0.319
+    & 0.392 & 0.351 & \secondres{0.391} & \boldres{0.342}
+    & 0.369 & 0.356 & \boldres{0.360} & \secondres{0.352}
+    & 0.297 & 0.321 & \boldres{0.289} & \secondres{0.319} \\ 
+    \cmidrule(lr){2-22}  & Avg    
+    &0.293	&0.314	&\secondres{0.290}	&\secondres{0.309}	
+    &0.288	&0.317  &\secondres{0.284}  &0.317 
+    &0.395	&0.352	&\secondres{0.392}	&\boldres{0.342}
+    &0.374	&0.383	&\boldres{0.361}	&\boldres{0.376}	
+    &0.288	&0.314	&\boldres{0.280}	&\secondres{0.313}	\\
+    \midrule\multirow{8}{*}{\rotatebox{90}{Weather}}
+    & 48     
+    & 0.161 & 0.188 & \boldres{0.152} & \boldres{0.174}
+    & 0.153 & 0.189 & \boldres{0.143} & \boldres{0.182}
+    & 0.159 & 0.189 & \boldres{0.147} & \boldres{0.177}
+    & 0.189 & 0.264 & \boldres{0.183} & \boldres{0.245}
+    & 0.169 & 0.237 & \boldres{0.158} & \boldres{0.226} \\ 
+    & 72    
+    & 0.178 & 0.212 & \secondres{0.174} & \boldres{0.203}
+    & 0.179 & 0.219 & \boldres{0.165} & \boldres{0.208}
+    & 0.189 & 0.211 & \boldres{0.176} & \boldres{0.204}
+    & 0.208 & 0.279 & \boldres{0.202} & \boldres{0.262}
+    & 0.200 & 0.273 & \secondres{0.196} & \boldres{0.265} \\ 
+    & 96    
+    & 0.201 & 0.232 & \boldres{0.195} & \boldres{0.221}
+    & 0.203 & 0.251 & \boldres{0.191} & \boldres{0.243}
+    & 0.201 & 0.234 & \secondres{0.197} & \boldres{0.225}
+    & 0.219 & 0.288 & \secondres{0.214} & \boldres{0.276}
+    & 0.223 & 0.298 & \boldres{0.215} & \boldres{0.289} \\ 
+    & 120    
+    & 0.204 & 0.235 & \boldres{0.197} & \boldres{0.223}
+    & 0.195 & 0.237 & \boldres{0.185} & \boldres{0.227}
+    & 0.213 & 0.202 & \boldres{0.205} & \boldres{0.196}
+    & 0.222 & 0.291 & \secondres{0.217} & \boldres{0.274}
+    & 0.228 & 0.300 & \boldres{0.214} & \secondres{0.299} \\ 
+    & 144    
+    & 0.221 & 0.249 & \boldres{0.210} & \boldres{0.233}
+    & 0.202 & 0.243 & \boldres{0.193} & \boldres{0.232}
+    & 0.219 & 0.247 & \boldres{0.212} & \boldres{0.238}
+    & 0.215 & 0.287 & 0.215 & \boldres{0.273}
+    & 0.236 & 0.313 & \boldres{0.224} & \boldres{0.304} \\ 
+    & 168    
+    & 0.224 & 0.254 & \boldres{0.213} & \boldres{0.238}
+    & 0.212 & 0.251 & \boldres{0.206} & \boldres{0.243}
+    & 0.233 & 0.258 & \secondres{0.229} & \boldres{0.247}
+    & 0.237 & 0.263 & \secondres{0.234} & \boldres{0.248}
+    & 0.235 & 0.261 & 0.241 & \boldres{0.255} \\
+    & 192    
+    & 0.244 & 0.266 & \boldres{0.232} & \boldres{0.249}
+    & 0.233 & 0.269 & \boldres{0.219} & \boldres{0.261}
+    & 0.245 & 0.271 & \secondres{0.241} & \boldres{0.260}
+    & 0.214 & 0.288 & \boldres{0.205} & \boldres{0.270}
+    & 0.263 & 0.331 & \boldres{0.235} & \secondres{0.329} \\
+    \cmidrule(lr){2-22}  & Avg    
+    &0.205	&0.234	&\boldres{0.196}	&\boldres{0.220}	
+    &0.197	&0.237  &\boldres{0.186}  &\boldres{0.228}
+    &0.209	&0.237	&\boldres{0.201}	&\boldres{0.221}	
+    &0.215	&0.280	&\secondres{0.210}	&\boldres{0.264}
+    &0.222	&0.288	&\boldres{0.212}	&\boldres{0.281}	\\ 
+    \midrule\multirow{8}{*}{\rotatebox{90}{ECL}}
+    & 48     
+    & 0.146 & 0.233 & \boldres{0.138} & \boldres{0.221}
+    & 0.172 & 0.259 & \boldres{0.164} & \secondres{0.256}
+    & 0.151 & 0.238 & \boldres{0.136} & \boldres{0.216}
+    & 0.189 & 0.264 & \secondres{0.188} & 0.264
+    & 0.148 & 0.236 & \boldres{0.141} & \boldres{0.224} \\
+    & 72    
+    & 0.161 & 0.247 & \secondres{0.158} & \boldres{0.241}
+    & 0.188 & 0.274 & \secondres{0.183} & \secondres{0.272}
+    & 0.168 & 0.253 & \boldres{0.158} & \boldres{0.228}
+    & 0.208 & 0.279 & \boldres{0.202} & \secondres{0.278}
+    & 0.165 & 0.251 & \boldres{0.157} & \boldres{0.236} \\
+    & 96    
+    & 0.171 & 0.256 & \secondres{0.166} & \boldres{0.248}
+    & 0.199 & 0.284 & \secondres{0.194} & \secondres{0.283}
+    & 0.178 & 0.262 & \boldres{0.161} & \boldres{0.236}
+    & 0.219 & 0.288 & \boldres{0.211} & 0.294
+    & 0.175 & 0.260 & \secondres{0.172} & \boldres{0.248} \\ 
+    & 120    
+    & 0.176 & 0.261 & \boldres{0.170} & \boldres{0.251}
+    & 0.203 & 0.287 & \boldres{0.194} & \secondres{0.284}
+    & 0.183 & 0.267 & \boldres{0.172} & \boldres{0.249}
+    & 0.222 & 0.291 & \secondres{0.221} & \secondres{0.290}
+    & 0.180 & 0.265 & \secondres{0.177} & \boldres{0.257} \\
+    & 144    
+    & 0.175 & 0.261 & \boldres{0.165} & \boldres{0.247}
+    & 0.200 & 0.283 & \boldres{0.191} & \secondres{0.281}
+    & 0.182 & 0.267 & \boldres{0.173} & \boldres{0.245}
+    & 0.215 & 0.287 & \secondres{0.210} & 0.291
+    & 0.180 & 0.265 & \secondres{0.176} & \boldres{0.254} \\
+    & 168    
+    & 0.176 & 0.262 & \boldres{0.166} & \boldres{0.248}
+    & 0.199 & 0.285 & \secondres{0.194} & \secondres{0.284}
+    & 0.182 & 0.266 & \boldres{0.165} & \boldres{0.249}
+    & 0.211 & 0.284 & \secondres{0.206} & 0.286
+    & 0.181 & 0.265 & \secondres{0.177} & \boldres{0.252} \\
+    & 192    
+    & 0.181 & 0.266 & \boldres{0.170} & \boldres{0.252}
+    & 0.200 & 0.283 & \secondres{0.196} & \secondres{0.279}
+    & 0.186 & 0.270 & \boldres{0.176} & \boldres{0.250}
+    & 0.214 & 0.288 & \secondres{0.212} & 0.291
+    & 0.184 & 0.267 & 0.184 & \boldres{0.258} \\ 
+    \cmidrule(lr){2-22}  & Avg    
+    &0.169	&0.255	&\boldres{0.162}	&\boldres{0.244}
+    &0.194	&0.279  &\boldres{0.188}  &\secondres{0.277} 
+    &0.176	&0.260	&\boldres{0.163}	&\boldres{0.239}	
+    &0.211	&0.283	&\secondres{0.207}	&0.285	
+    &0.173	&0.258	&\secondres{0.169}	&\boldres{0.247}	\\ 
+    % \midrule
+    % \multicolumn{2}{c|}{{{$1^{\text{st}}$ Count}}}       &    40   &    47   & 2    & 4    & 6    & 8    &1 &0  & 3     & 0     & 0     & 0     & 1     & 2     & 1     &0  & 5     & 4     & 4     & 0         \\
+\bottomrule
+        \end{tabular}}
+\end{table}
+
+\begin{table}[htbp]
+\caption{The robustness of AMRC on SOFTS. Results are averaged over ten experiments, each tested with different random seeds.}
+\label{tab:error_bar}
+\centering
+\resizebox{1\columnwidth}{!}{
+\begin{tabular}{c|cc|cc|cc|cc}
+\toprule
+Dataset &\multicolumn{2}{c}{ETTh1} & \multicolumn{2}{c}{ETTh2}&\multicolumn{2}{c}{Solar-Energy}&\multicolumn{2}{c}{Weather} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
+Prediction & MSE     & MAE     & MSE     & MAE     & MSE     & MAE    & MSE     & MAE    \\
+\midrule
+48      & $0.334 \pm 0.003 $& $0.359 \pm 0.002 $& $0.221 \pm 0.001 $& $0.303 \pm 0.002 $& $0.253 \pm 0.002 $& $0.289 \pm 0.002 $& $0.152 \pm 0.001 $& $0.174 \pm 0.005 $\\
+72      & $0.364 \pm 0.001 $& $0.380 \pm 0.001 $& $0.275 \pm 0.002 $& $0.344 \pm 0.001 $& $0.313 \pm 0.001 $& $0.333 \pm 0.001 $& $0.174 \pm 0.003 $& $0.203 \pm 0.002 $\\
+96      & $0.377 \pm 0.002 $& $0.388 \pm 0.002 $& $0.307 \pm 0.002 $& $0.364 \pm 0.001 $& $0.308 \pm 0.002 $& $0.322 \pm 0.002 $& $0.195 \pm 0.002 $& $0.221 \pm 0.002 $\\
+120     & $0.400 \pm 0.002 $& $0.400 \pm 0.005 $& $0.315 \pm 0.001 $& $0.368 \pm 0.002 $& $0.282 \pm 0.002 $& $0.299 \pm 0.002 $& $0.197 \pm 0.001 $& $0.223 \pm 0.003 $\\
+144     & $0.404 \pm 0.002 $& $0.402 \pm 0.002 $& $0.333 \pm 0.002 $& $0.371 \pm 0.002 $& $0.291 \pm 0.002 $& $0.309 \pm 0.003 $& $0.210 \pm 0.002 $& $0.233 \pm 0.001 $\\
+168     & $0.416 \pm 0.002 $& $0.409 \pm 0.002 $& $0.354 \pm 0.002 $& $0.385 \pm 0.001 $& $0.288 \pm 0.002 $& $0.304 \pm 0.002 $& $0.213 \pm 0.003 $& $0.238 \pm 0.002 $\\
+192     & $0.427 \pm 0.002 $& $0.410 \pm 0.002 $& $0.373 \pm 0.002 $& $0.399 \pm 0.005 $& $0.298 \pm 0.001 $& $0.308 \pm 0.001 $& $0.232 \pm 0.003 $& $0.249 \pm 0.002 $\\
+\bottomrule
+\end{tabular}
+}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Average AMRC Effectiveness Across Datasets and Models. Ratio is the percentage of samples with reduced MSE under ideal masking. Ratio\* is the same metric after training with AMRC, reflecting improved robustness.}
+\label{tab:amrc_ratio}
+\resizebox{\columnwidth}{!}{
+\begin{tabular}{c|ccccccccccc}
+    \toprule
+    \multicolumn{2}{c}{Models} & 
+    \multicolumn{2}{c}{SOFTS}   &
+    \multicolumn{2}{c}{TimeMixer} & 
+    \multicolumn{2}{c}{iTransformer} & 
+    \multicolumn{2}{c}{PatchTST} &
+    \multicolumn{2}{c}{TSMixer} \\
+    \cmidrule(lr){3-4} \cmidrule(lr){5-6}\cmidrule(lr){7-8} \cmidrule(lr){9-10}\cmidrule(lr){11-12}
+    \multicolumn{2}{c}{Metric} & \ratio & \ratio* & \ratio & \ratio* & \ratio & \ratio* & \ratio & \ratio* & \ratio & \ratio* \\
+    \midrule\multicolumn{2}{c}{ETTh1} & 57.14\% & 48.7\% & 49.69\% & 37.81\% & 51.88\% & 42.93\% & 57.81\% & 42.91\% & 52.92\% & 39.1\% \\
+    \midrule\multicolumn{2}{c}{ETTh2} & 30.99\% & 21.09\% & 47.16\% & 34.89\% & 33.28\% & 24.11\% & 43.54\% & 27.91\% & 44.29\% & 29.63\% \\
+    \midrule\multicolumn{2}{c}{Solar-Energy} & 44.87\% & 33.83\% & 37.52\% & 29.61\% & 71.18\% & 67.72\% & 53.26\% & 48.02\% & 41.66\% & 30.11\% \\
+    \midrule\multicolumn{2}{c}{Weather} & 54.63\% & 48.33\% & 67.39\% & 52.78\% & 79.4\% & 69.36\% & 41.98\% & 29.86\% & 69.32\% & 56.26\% \\
+\bottomrule
+    \end{tabular}
+}
+\end{table}
+\newpage
+\subsection{Visualized Prediction Comparison Chart}
+
+\begin{figure}[htbp]
+    \centering
+     \caption{}
+    % 第一行
+    \begin{minipage}{0.48 \textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/line/ETTh1_HUFL2.png}
+        \caption*{SOFTS in ETTh1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/line/ETTh2_HULL2.png}
+        \caption*{SOFTS in ETTh2}
+    \end{minipage}
+
+    \vspace{0.5cm}
+    
+    % 第二行
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/line/ETTm1_MUFL2.png}
+        \caption*{TimeMixer in ETTm1}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/line/ETTm2_MULL2.png}
+        \caption*{TimeMixer in ETTm2}
+    \end{minipage}
+
+    \vspace{0.5cm}
+
+    % 第三行
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/line/solar_Leistung_lag_24_2.png}
+        \caption*{iTransformer in Solar-Energy}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/line/weather_H2OC(mol)2.png}
+        \caption*{iTransformer in weather}
+    \end{minipage}
+
+    \vspace{0.5cm}
+
+    % 第四行
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/line/weather_T(degc)2.png}
+        \caption*{PatchTST in weather}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{fig/line/ecl_LULL.png}
+        \caption*{TSMixer in ECL}
+    \end{minipage}
+\end{figure}
+
+
+
+
+
+
+
+\newpage
+\section{Dataset description}
+\label{sec:datasetdes}
+Here we provide detailed descriptions along with download links for each dataset:
+\begin{enumerate}
+    \item \textbf{ETT (Electricity Transformer Temperature)}~\cite{informer}\footnote{\url{https://github.com/zhouhaoyi/ETDataset}}:
+    This collection includes two hourly-resolution datasets (ETTh) and two 15-minute-resolution datasets (ETTm). Each dataset captures seven key operational metrics (including oil and load measurements) from electricity transformers, spanning from July 2016 to July 2018.
+    
+    \item \textbf{Electricity}\footnote{\url{https://archive.ics.uci.edu/dataset/321/electricityloaddiagrams20112014}}:
+    Comprising hourly power consumption records from 321 customers, this dataset covers the period from 2012 to 2014.
+    
+    \item \textbf{Weather}:
+    Featuring 21 meteorological indicators (such as air temperature and humidity), this dataset provides 10-minute-interval recordings throughout 2020, sourced from weather stations in Germany.
+    
+    \item \textbf{Solar-Energy}:
+    Documents the solar power generation output of 137 photovoltaic plants in 2006, with measurements taken at 10-minute intervals.
+\end{enumerate}
+
+\begin{table}[htbp]
+    \centering
+    \caption{Detailed Dataset Descriptions. The table summarizes key characteristics of the time series datasets, including the number of channels, prediction lengths, dataset splits, temporal granularity, and application domains.}
+    \resizebox{1\columnwidth}{!}{
+    \label{tab:dataset_details}
+    \begin{tabular}{lcccccl}
+    \toprule
+    \textbf{Dataset} & \textbf{Channels} & \textbf{Prediction Length} & \textbf{Dataset Split (Train, Val, Test)} & \textbf{Granularity} & \textbf{Domain} \\
+    \midrule
+    ETTh1, ETTh2 & 7 & \{48, 72, 96, 120, 144, 168, 192\} & (8545, 2881, 2881) & Hourly & Electricity \\
+    ETTm1, ETTm2 & 7 & \{48, 72, 96, 120, 144, 168, 192\} & (34465, 11521, 11521) & 15min & Electricity \\
+    Weather & 21 & \{48, 72, 96, 120, 144, 168, 192\} & (36792, 5271, 10540) & 10min & Weather \\
+    ECL & 321 & \{48, 72, 96, 120, 144, 168, 192\} & (18317, 2633, 5261) & Hourly & Electricity \\
+    Solar-Energy & 137 & \{48, 72, 96, 120, 144, 168, 192\} & (36601, 5161, 10417) & 10min & Energy \\
+    \bottomrule
+    \end{tabular}}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newpage
+\section*{NeurIPS Paper Checklist}
+
+%%% BEGIN INSTRUCTIONS %%%
+The checklist is designed to encourage best practices for responsible machine learning research, addressing issues of reproducibility, transparency, research ethics, and societal impact. Do not remove the checklist: {\bf The papers not including the checklist will be desk rejected.} The checklist should follow the references and follow the (optional) supplemental material.  The checklist does NOT count towards the page
+limit. 
+
+Please read the checklist guidelines carefully for information on how to answer these questions. For each question in the checklist:
+\begin{itemize}
+    \item You should answer \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item \answerNA{} means either that the question is Not Applicable for that particular paper or the relevant information is Not Available.
+    \item Please provide a short (1–2 sentence) justification right after your answer (even for NA). 
+   % \item {\bf The papers not including the checklist will be desk rejected.}
+\end{itemize}
+
+{\bf The checklist answers are an integral part of your paper submission.} They are visible to the reviewers, area chairs, senior area chairs, and ethics reviewers. You will be asked to also include it (after eventual revisions) with the final version of your paper, and its final version will be published with the paper.
+
+The reviewers of your paper will be asked to use the checklist as one of the factors in their evaluation. While "\answerYes{}" is generally preferable to "\answerNo{}", it is perfectly acceptable to answer "\answerNo{}" provided a proper justification is given (e.g., "error bars are not reported because it would be too computationally expensive" or "we were unable to find the license for the dataset we used"). In general, answering "\answerNo{}" or "\answerNA{}" is not grounds for rejection. While the questions are phrased in a binary way, we acknowledge that the true answer is often more nuanced, so please just use your best judgment and write a justification to elaborate. All supporting evidence can appear either in the main paper or the supplemental material, provided in appendix. If you answer \answerYes{} to a question, in the justification please point to the section(s) where related material for the question can be found.
+
+IMPORTANT, please:
+\begin{itemize}
+    \item {\bf Delete this instruction block, but keep the section heading ``NeurIPS Paper Checklist"},
+    \item  {\bf Keep the checklist subsection headings, questions/answers and guidelines below.}
+    \item {\bf Do not modify the questions and only use the provided macros for your answers}.
+\end{itemize} 
+ 
+
+%%% END INSTRUCTIONS %%%
+
+
+\begin{enumerate}
+
+\item {\bf Claims}
+    \item[] Question: Do the main claims made in the abstract and introduction accurately reflect the paper's contributions and scope?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification:  The main claims are clearly written in the abstract and introduction.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the abstract and introduction do not include the claims made in the paper.
+        \item The abstract and/or introduction should clearly state the claims made, including the contributions made in the paper and important assumptions and limitations. A No or NA answer to this question will not be perceived well by the reviewers. 
+        \item The claims made should match theoretical and experimental results, and reflect how much the results can be expected to generalize to other settings. 
+        \item It is fine to include aspirational goals as motivation as long as it is clear that these goals are not attained by the paper. 
+    \end{itemize}
+
+\item {\bf Limitations}
+    \item[] Question: Does the paper discuss the limitations of the work performed by the authors?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We discussed the limitation of our method in Appendix A.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper has no limitation while the answer No means that the paper has limitations, but those are not discussed in the paper. 
+        \item The authors are encouraged to create a separate "Limitations" section in their paper.
+        \item The paper should point out any strong assumptions and how robust the results are to violations of these assumptions (e.g., independence assumptions, noiseless settings, model well-specification, asymptotic approximations only holding locally). The authors should reflect on how these assumptions might be violated in practice and what the implications would be.
+        \item The authors should reflect on the scope of the claims made, e.g., if the approach was only tested on a few datasets or with a few runs. In general, empirical results often depend on implicit assumptions, which should be articulated.
+        \item The authors should reflect on the factors that influence the performance of the approach. For example, a facial recognition algorithm may perform poorly when image resolution is low or images are taken in low lighting. Or a speech-to-text system might not be used reliably to provide closed captions for online lectures because it fails to handle technical jargon.
+        \item The authors should discuss the computational efficiency of the proposed algorithms and how they scale with dataset size.
+        \item If applicable, the authors should discuss possible limitations of their approach to address problems of privacy and fairness.
+        \item While the authors might fear that complete honesty about limitations might be used by reviewers as grounds for rejection, a worse outcome might be that reviewers discover limitations that aren't acknowledged in the paper. The authors should use their best judgment and recognize that individual actions in favor of transparency play an important role in developing norms that preserve the integrity of the community. Reviewers will be specifically instructed to not penalize honesty concerning limitations.
+    \end{itemize}
+
+\item {\bf Theory assumptions and proofs}
+    \item[] Question: For each theoretical result, does the paper provide the full set of assumptions and a complete (and correct) proof?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: All the theories and hypotheses we proposed are supported by experimental and mathematical derivations.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include theoretical results. 
+        \item All the theorems, formulas, and proofs in the paper should be numbered and cross-referenced.
+        \item All assumptions should be clearly stated or referenced in the statement of any theorems.
+        \item The proofs can either appear in the main paper or the supplemental material, but if they appear in the supplemental material, the authors are encouraged to provide a short proof sketch to provide intuition. 
+        \item Inversely, any informal proof provided in the core of the paper should be complemented by formal proofs provided in appendix or supplemental material.
+        \item Theorems and Lemmas that the proof relies upon should be properly referenced. 
+    \end{itemize}
+
+    \item {\bf Experimental result reproducibility}
+    \item[] Question: Does the paper fully disclose all the information needed to reproduce the main experimental results of the paper to the extent that it affects the main claims and/or conclusions of the paper (regardless of whether the code and data are provided or not)?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We provide detailed descriptions of the hyperparameters in the paper and appendices, along with an anonymous link to the experimental demo in the abstract.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include experiments.
+        \item If the paper includes experiments, a No answer to this question will not be perceived well by the reviewers: Making the paper reproducible is important, regardless of whether the code and data are provided or not.
+        \item If the contribution is a dataset and/or model, the authors should describe the steps taken to make their results reproducible or verifiable. 
+        \item Depending on the contribution, reproducibility can be accomplished in various ways. For example, if the contribution is a novel architecture, describing the architecture fully might suffice, or if the contribution is a specific model and empirical evaluation, it may be necessary to either make it possible for others to replicate the model with the same dataset, or provide access to the model. In general. releasing code and data is often one good way to accomplish this, but reproducibility can also be provided via detailed instructions for how to replicate the results, access to a hosted model (e.g., in the case of a large language model), releasing of a model checkpoint, or other means that are appropriate to the research performed.
+        \item While NeurIPS does not require releasing code, the conference does require all submissions to provide some reasonable avenue for reproducibility, which may depend on the nature of the contribution. For example
+        \begin{enumerate}
+            \item If the contribution is primarily a new algorithm, the paper should make it clear how to reproduce that algorithm.
+            \item If the contribution is primarily a new model architecture, the paper should describe the architecture clearly and fully.
+            \item If the contribution is a new model (e.g., a large language model), then there should either be a way to access this model for reproducing the results or a way to reproduce the model (e.g., with an open-source dataset or instructions for how to construct the dataset).
+            \item We recognize that reproducibility may be tricky in some cases, in which case authors are welcome to describe the particular way they provide for reproducibility. In the case of closed-source models, it may be that access to the model is limited in some way (e.g., to registered users), but it should be possible for other researchers to have some path to reproducing or verifying the results.
+        \end{enumerate}
+    \end{itemize}
+
+
+\item {\bf Open access to data and code}
+    \item[] Question: Does the paper provide open access to the data and code, with sufficient instructions to faithfully reproduce the main experimental results, as described in supplemental material?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We have included a link to an anonymous demo of our experiments in the abstract.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that paper does not include experiments requiring code.
+        \item Please see the NeurIPS code and data submission guidelines (\url{https://nips.cc/public/guides/CodeSubmissionPolicy}) for more details.
+        \item While we encourage the release of code and data, we understand that this might not be possible, so “No” is an acceptable answer. Papers cannot be rejected simply for not including code, unless this is central to the contribution (e.g., for a new open-source benchmark).
+        \item The instructions should contain the exact command and environment needed to run to reproduce the results. See the NeurIPS code and data submission guidelines (\url{https://nips.cc/public/guides/CodeSubmissionPolicy}) for more details.
+        \item The authors should provide instructions on data access and preparation, including how to access the raw data, preprocessed data, intermediate data, and generated data, etc.
+        \item The authors should provide scripts to reproduce all experimental results for the new proposed method and baselines. If only a subset of experiments are reproducible, they should state which ones are omitted from the script and why.
+        \item At submission time, to preserve anonymity, the authors should release anonymized versions (if applicable).
+        \item Providing as much information as possible in supplemental material (appended to the paper) is recommended, but including URLs to data and code is permitted.
+    \end{itemize}
+
+
+\item {\bf Experimental setting/details}
+    \item[] Question: Does the paper specify all the training and test details (e.g., data splits, hyperparameters, how they were chosen, type of optimizer, etc.) necessary to understand the results?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We provide the experimental setup details in both the main text and appendices.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include experiments.
+        \item The experimental setting should be presented in the core of the paper to a level of detail that is necessary to appreciate the results and make sense of them.
+        \item The full details can be provided either with the code, in appendix, or as supplemental material.
+    \end{itemize}
+
+\item {\bf Experiment statistical significance}
+    \item[] Question: Does the paper report error bars suitably and correctly defined or other appropriate information about the statistical significance of the experiments?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: The margin of error is reported in the appendix.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include experiments.
+        \item The authors should answer "Yes" if the results are accompanied by error bars, confidence intervals, or statistical significance tests, at least for the experiments that support the main claims of the paper.
+        \item The factors of variability that the error bars are capturing should be clearly stated (for example, train/test split, initialization, random drawing of some parameter, or overall run with given experimental conditions).
+        \item The method for calculating the error bars should be explained (closed form formula, call to a library function, bootstrap, etc.)
+        \item The assumptions made should be given (e.g., Normally distributed errors).
+        \item It should be clear whether the error bar is the standard deviation or the standard error of the mean.
+        \item It is OK to report 1-sigma error bars, but one should state it. The authors should preferably report a 2-sigma error bar than state that they have a 96\% CI, if the hypothesis of Normality of errors is not verified.
+        \item For asymmetric distributions, the authors should be careful not to show in tables or figures symmetric error bars that would yield results that are out of range (e.g. negative error rates).
+        \item If error bars are reported in tables or plots, The authors should explain in the text how they were calculated and reference the corresponding figures or tables in the text.
+    \end{itemize}
+
+\item {\bf Experiments compute resources}
+    \item[] Question: For each experiment, does the paper provide sufficient information on the computer resources (type of compute workers, memory, time of execution) needed to reproduce the experiments?
+    \item[] Answer:  \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We provide sufficient computational resource details for each experiment in both the main text and appendices.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not include experiments.
+        \item The paper should indicate the type of compute workers CPU or GPU, internal cluster, or cloud provider, including relevant memory and storage.
+        \item The paper should provide the amount of compute required for each of the individual experimental runs as well as estimate the total compute. 
+        \item The paper should disclose whether the full research project required more compute than the experiments reported in the paper (e.g., preliminary or failed experiments that didn't make it into the paper). 
+    \end{itemize}
+    
+\item {\bf Code of ethics}
+    \item[] Question: Does the research conducted in the paper conform, in every respect, with the NeurIPS Code of Ethics \url{https://neurips.cc/public/EthicsGuidelines}?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: Our methodology and implementation fully adhere to the ethical code standards set forth by NeurIPS.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the authors have not reviewed the NeurIPS Code of Ethics.
+        \item If the authors answer No, they should explain the special circumstances that require a deviation from the Code of Ethics.
+        \item The authors should make sure to preserve anonymity (e.g., if there is a special consideration due to laws or regulations in their jurisdiction).
+    \end{itemize}
+
+
+\item {\bf Broader impacts}
+    \item[] Question: Does the paper discuss both potential positive societal impacts and negative societal impacts of the work performed?
+    \item[] Answer: \answerNA{} % Replace by \answerNA{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We have discussed the broader impact of time series forecasting in both abstract and introduction.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that there is no societal impact of the work performed.
+        \item If the authors answer NA or No, they should explain why their work has no societal impact or why the paper does not address societal impact.
+        \item Examples of negative societal impacts include potential malicious or unintended uses (e.g., disinformation, generating fake profiles, surveillance), fairness considerations (e.g., deployment of technologies that could make decisions that unfairly impact specific groups), privacy considerations, and security considerations.
+        \item The conference expects that many papers will be foundational research and not tied to particular applications, let alone deployments. However, if there is a direct path to any negative applications, the authors should point it out. For example, it is legitimate to point out that an improvement in the quality of generative models could be used to generate deepfakes for disinformation. On the other hand, it is not needed to point out that a generic algorithm for optimizing neural networks could enable people to train models that generate Deepfakes faster.
+        \item The authors should consider possible harms that could arise when the technology is being used as intended and functioning correctly, harms that could arise when the technology is being used as intended but gives incorrect results, and harms following from (intentional or unintentional) misuse of the technology.
+        \item If there are negative societal impacts, the authors could also discuss possible mitigation strategies (e.g., gated release of models, providing defenses in addition to attacks, mechanisms for monitoring misuse, mechanisms to monitor how a system learns from feedback over time, improving the efficiency and accessibility of ML).
+    \end{itemize}
+    
+\item {\bf Safeguards}
+    \item[] Question: Does the paper describe safeguards that have been put in place for responsible release of data or models that have a high risk for misuse (e.g., pretrained language models, image generators, or scraped datasets)?
+    \item[] Answer: \answerNo{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: This paper does not have this risk.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper poses no such risks.
+        \item Released models that have a high risk for misuse or dual-use should be released with necessary safeguards to allow for controlled use of the model, for example by requiring that users adhere to usage guidelines or restrictions to access the model or implementing safety filters. 
+        \item Datasets that have been scraped from the Internet could pose safety risks. The authors should describe how they avoided releasing unsafe images.
+        \item We recognize that providing effective safeguards is challenging, and many papers do not require this, but we encourage authors to take this into account and make a best faith effort.
+    \end{itemize}
+
+\item {\bf Licenses for existing assets}
+    \item[] Question: Are the creators or original owners of assets (e.g., code, data, models), used in the paper, properly credited and are the license and terms of use explicitly mentioned and properly respected?
+    \item[] Answer: \answerYes{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We included it in implementation details and appendix.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not use existing assets.
+        \item The authors should cite the original paper that produced the code package or dataset.
+        \item The authors should state which version of the asset is used and, if possible, include a URL.
+        \item The name of the license (e.g., CC-BY 4.0) should be included for each asset.
+        \item For scraped data from a particular source (e.g., website), the copyright and terms of service of that source should be provided.
+        \item If assets are released, the license, copyright information, and terms of use in the package should be provided. For popular datasets, \url{paperswithcode.com/datasets} has curated licenses for some datasets. Their licensing guide can help determine the license of a dataset.
+        \item For existing datasets that are re-packaged, both the original license and the license of the derived asset (if it has changed) should be provided.
+        \item If this information is not available online, the authors are encouraged to reach out to the asset's creators.
+    \end{itemize}
+
+\item {\bf New assets}
+    \item[] Question: Are new assets introduced in the paper well documented and is the documentation provided alongside the assets?
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: N/A.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not release new assets.
+        \item Researchers should communicate the details of the dataset/code/model as part of their submissions via structured templates. This includes details about training, license, limitations, etc. 
+        \item The paper should discuss whether and how consent was obtained from people whose asset is used.
+        \item At submission time, remember to anonymize your assets (if applicable). You can either create an anonymized URL or include an anonymized zip file.
+    \end{itemize}
+
+\item {\bf Crowdsourcing and research with human subjects}
+    \item[] Question: For crowdsourcing experiments and research with human subjects, does the paper include the full text of instructions given to participants and screenshots, if applicable, as well as details about compensation (if any)? 
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: N/A.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not involve crowdsourcing nor research with human subjects.
+        \item Including this information in the supplemental material is fine, but if the main contribution of the paper involves human subjects, then as much detail as possible should be included in the main paper. 
+        \item According to the NeurIPS Code of Ethics, workers involved in data collection, curation, or other labor should be paid at least the minimum wage in the country of the data collector. 
+    \end{itemize}
+
+\item {\bf Institutional review board (IRB) approvals or equivalent for research with human subjects}
+    \item[] Question: Does the paper describe potential risks incurred by study participants, whether such risks were disclosed to the subjects, and whether Institutional Review Board (IRB) approvals (or an equivalent approval/review based on the requirements of your country or institution) were obtained?
+    \item[] Answer: \answerNA{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: N/A.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the paper does not involve crowdsourcing nor research with human subjects.
+        \item Depending on the country in which research is conducted, IRB approval (or equivalent) may be required for any human subjects research. If you obtained IRB approval, you should clearly state this in the paper. 
+        \item We recognize that the procedures for this may vary significantly between institutions and locations, and we expect authors to adhere to the NeurIPS Code of Ethics and the guidelines for their institution. 
+        \item For initial submissions, do not include any information that would break anonymity (if applicable), such as the institution conducting the review.
+    \end{itemize}
+
+\item {\bf Declaration of LLM usage}
+    \item[] Question: Does the paper describe the usage of LLMs if it is an important, original, or non-standard component of the core methods in this research? Note that if the LLM is used only for writing, editing, or formatting purposes and does not impact the core methodology, scientific rigorousness, or originality of the research, declaration is not required.
+    %this research? 
+    \item[] Answer: \answerNo{} % Replace by \answerYes{}, \answerNo{}, or \answerNA{}.
+    \item[] Justification: We did not use any large language models (LLMs) in this work.
+    \item[] Guidelines:
+    \begin{itemize}
+        \item The answer NA means that the core method development in this research does not involve LLMs as any important, original, or non-standard components.
+        \item Please refer to our LLM policy (\url{https://neurips.cc/Conferences/2025/LLM}) for what should or should not be described.
+    \end{itemize}
+
+\end{enumerate}
+
+
+\end{document}
