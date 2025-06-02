@@ -72,7 +72,7 @@ class Model(nn.Module):
         # Decoder
         self.projection = nn.Linear(configs.d_model, configs.pred_len, bias=True)
 
-    def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec, return_embeddings=False):
+    def forecast(self, x_enc, x_mark_enc, x_dec, x_mark_dec):
         # Normalization from Non-stationary Transformer
         if self.use_norm:
             means = x_enc.mean(1, keepdim=True).detach()
@@ -82,8 +82,6 @@ class Model(nn.Module):
 
         _, _, N = x_enc.shape
         enc_out = self.enc_embedding(x_enc, x_mark_enc)
-        # Store encoder output as embedding
-        enc_out_embedding = enc_out.clone()
         enc_out, attns = self.encoder(enc_out, attn_mask=None)
         dec_out = self.projection(enc_out).permute(0, 2, 1)[:, :, :N]
 
@@ -91,16 +89,8 @@ class Model(nn.Module):
         if self.use_norm:
             dec_out = dec_out * (stdev[:, 0, :].unsqueeze(1).repeat(1, self.pred_len, 1))
             dec_out = dec_out + (means[:, 0, :].unsqueeze(1).repeat(1, self.pred_len, 1))
-        
-        if return_embeddings:
-            # Return both output and embedding
-            return dec_out, enc_out_embedding
         return dec_out
 
-    def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None, return_embeddings=False):
-        if return_embeddings:
-            dec_out, enc_embedding = self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec, return_embeddings=True)
-            return dec_out[:, -self.pred_len:, :], enc_embedding  # [B, L, D], embedding
-        else:
-            dec_out = self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)
-            return dec_out[:, -self.pred_len:, :]  # [B, L, D]
+    def forward(self, x_enc, x_mark_enc, x_dec, x_mark_dec, mask=None):
+        dec_out = self.forecast(x_enc, x_mark_enc, x_dec, x_mark_dec)
+        return dec_out[:, -self.pred_len:, :]  # [B, L, D]

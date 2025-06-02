@@ -25,9 +25,9 @@ singularity exec --nv \
     --overlay /scratch/sx2490/pytorch-example/my_pytorch.ext3:ro \
     /scratch/work/public/singularity/cuda12.1.1-cudnn8.9.0-devel-ubuntu22.04.2.sif \
     /bin/bash -c "source /ext3/env.sh; \
-    cd /scratch/sx2490/SOFTS_exp/SOFTS/ && \
+    cd /scratch/sx2490/SOFTS_exp/SOFTS_embsim/ && \
     echo 'Starting training...' && \
-    bash SOFTS_ETTh1.sh || { echo 'Training script failed'; exit 1; }"
+    bash SOFTS_data.sh || { echo 'Training script failed'; exit 1; }"
 
 echo "================ JOB COMPLETED ================"
 echo "End time: $(date)"
@@ -35,7 +35,7 @@ echo "==========================================="
 
 # Extract and save results to a summary file
 OUTFILE="/scratch/sx2490/Logs/softs/${SLURM_JOB_ID}.out"
-SUMMARY_FILE="/scratch/sx2490/SOFTS_exp/SOFTS/${SLURM_JOB_ID}.txt"
+SUMMARY_FILE="/scratch/sx2490/SOFTS_exp/SOFTS_embsim/${SLURM_JOB_ID}.txt"
 
 echo "Extracting results to summary file: ${SUMMARY_FILE}"
 echo "JOB ID: ${SLURM_JOB_ID}" > "${SUMMARY_FILE}"

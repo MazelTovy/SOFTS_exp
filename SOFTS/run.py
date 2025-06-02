@@ -55,6 +55,7 @@ parser.add_argument('--activation', type=str, default='gelu', help='activation')
 parser.add_argument('--output_attention', action='store_true', help='whether to output attention in ecoder')
 parser.add_argument('--attention_type', type=str, default="full", help='the attention type of transformer')
 parser.add_argument('--use_norm', type=int, default=True, help='use norm and denorm')
+parser.add_argument('--emb_penalty_weight', type=float, default=100, help='weight for embedding similarity penalty')
 
 # optimization
 parser.add_argument('--num_workers', type=int, default=4, help='data loader num workers')
@@ -67,11 +68,6 @@ parser.add_argument('--des', type=str, default='test', help='exp description')
 parser.add_argument('--loss', type=str, default='MSE', help='loss function')
 parser.add_argument('--lradj', type=str, default='type1', help='adjust learning rate')
 parser.add_argument('--use_amp', action='store_true', help='use automatic mixed precision training', default=False)
-
-# loss function parameters
-parser.add_argument('--lambda_penalty', type=float, default=1, help='weight of the penalty term in the combined loss')
-parser.add_argument('--sim_threshold', type=float, default=0.7, help='similarity threshold for the penalty term')
-parser.add_argument('--dist_threshold', type=float, default=0.5, help='distance threshold for the penalty term')
 
 # GPU
 parser.add_argument('--use_gpu', type=bool, default=True, help='use gpu')
