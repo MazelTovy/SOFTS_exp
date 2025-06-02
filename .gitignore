@@ -1,2 +1,4 @@
 *.txt
 *.SBATCH
+*.log
+*.pyc
