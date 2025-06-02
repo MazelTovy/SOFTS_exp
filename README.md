@@ -133,19 +133,6 @@ SOFTS_exp/
 2. **High-Dimensional Challenges**: ESP effectiveness diminishes in very high-dimensional embedding spaces
 3. **Approximation Bounds**: Optimal mask selection is limited by sampling size m
 
-## Citation
-
-If you find this work useful, please cite:
-
-```bibtex
-@article{amrc2025,
-  title={Abstain Mask Retain Core: Time Series Prediction by Adaptive Masking Loss with Representation Consistency},
-  author={[Authors]},
-  journal={NeurIPS},
-  year={2025}
-}
-```
-
 ## Acknowledgments
 
 This research investigates a fundamental but overlooked aspect of time series forecasting: the detrimental effects of redundant feature learning. By introducing AMRC, we provide both theoretical insights and practical solutions for improving forecasting accuracy through redundancy suppression.
